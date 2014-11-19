@@ -14,7 +14,6 @@ def fetchForTweets(countOfTweetsToBeFetched, querry, fileName):
 
     tweets                          =   []
      
-
     csvFile = open(fileName, 'w', encoding='utf8')
     csvWriter = csv.writer(csvFile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
 

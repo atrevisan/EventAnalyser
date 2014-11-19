@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowObject</class>
+ <widget class="QMainWindow" name="MainWindowObject">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Twitter Event Analyser</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuEvent_Analysis">
+    <property name="title">
+     <string>Event Analysis</string>
+    </property>
+    <addaction name="actionFetch_Tweets"/>
+    <addaction name="actionAnalyse_Tweets"/>
+   </widget>
+   <addaction name="menuEvent_Analysis"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionFetch_Tweets">
+   <property name="text">
+    <string>Fetch Tweets</string>
+   </property>
+  </action>
+  <action name="actionAnalyse_Tweets">
+   <property name="text">
+    <string>Analyse Tweets</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

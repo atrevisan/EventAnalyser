@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e944dca7-8aaf-4cdb-a3bd-b697a25750ef</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>EventAnalyser.py</StartupFile>
+    <StartupFile>MainWindow.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EventAnalyser.py" />
+    <Compile Include="FetchTweets.py" />
+    <Compile Include="MainWindow.py" />
     <Compile Include="SearchingTwitter.py">
       <SubType>Code</SubType>
     </Compile>
