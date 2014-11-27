@@ -1,88 +1,121 @@
-# -*- coding: utf-8 -*-
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4 import QtGui, QtCore
+from Ui_FetchTweets import Ui_fetchTweetsObject
+from time import sleep
+from TwyithonParams import *
+from TextUtils import preProcessTweetText
+import csv
 
-# Form implementation generated from reading ui file 'fetch_tweets.ui'
-#
-# Created: Tue Nov 18 09:34:36 2014
-#      by: PyQt4 UI code generator 4.11.2
-#
-# WARNING! All changes made in this file will be lost!
+class FetchTweets(QWidget, Ui_fetchTweetsObject):
 
-from PyQt4 import QtCore, QtGui
+    def __init__(self, parentWindow):
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
+        QWidget.__init__(self)
+ 
+        self.parentWindow = parentWindow
 
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
-
-class Ui_fetchTweetsObject(QtGui.QWidget):
-
-    def __init__(self, mainWindow):
-        super(Ui_fetchTweetsObject, self).__init__()
-        self.mainWindow = mainWindow
+        # set up User Interface (widgets, layout...)
         self.setupUi(self)
 
-    def setupUi(self, fetchTweetsObject):
-        fetchTweetsObject.setObjectName(_fromUtf8("fetchTweetsObject"))
-        fetchTweetsObject.resize(800, 400)
-        self.verticalLayout_2 = QtGui.QVBoxLayout(fetchTweetsObject)
-        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.formLayout = QtGui.QFormLayout()
-        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
-        self.formLayout.setObjectName(_fromUtf8("formLayout"))
-        self.lineEdit = QtGui.QLineEdit(fetchTweetsObject)
-        self.lineEdit.setMinimumSize(QtCore.QSize(400, 0))
-        self.lineEdit.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.lineEdit)
-        self.pushButton = QtGui.QPushButton(fetchTweetsObject)
-        self.pushButton.setMaximumSize(QtCore.QSize(40, 40))
-        self.pushButton.setText(_fromUtf8(""))
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("gui\\mg.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.pushButton.setIcon(icon)
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.pushButton)
-        self.lineEdit_2 = QtGui.QLineEdit(fetchTweetsObject)
-        self.lineEdit_2.setMinimumSize(QtCore.QSize(20, 0))
-        self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.lineEdit_2)
-        self.pushButton_2 = QtGui.QPushButton(fetchTweetsObject)
-        self.pushButton_2.setMinimumSize(QtCore.QSize(0, 0))
-        self.pushButton_2.setMaximumSize(QtCore.QSize(40, 40))
-        self.pushButton_2.setText(_fromUtf8(""))
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("gui\\stop.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.pushButton_2.setIcon(icon1)
-        self.pushButton_2.setIconSize(QtCore.QSize(20, 20))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.pushButton_2)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.formLayout.setItem(1, QtGui.QFormLayout.LabelRole, spacerItem)
-        self.verticalLayout_2.addLayout(self.formLayout)
+        # custom event handling
+        self.pushButtonSearch.clicked.connect(self.fetchTweets)
+        self.pushButtonStopSearching.clicked.connect(self.stopFetchingTweets)
+        self.lineEditOutputFile.textChanged.connect(self.outputFileSupplied)
+        
+        self._active = False
+        self.pushButtonSearch.setEnabled(False)
+        self.pushButtonStopSearching.setEnabled(False)
 
-        self.retranslateUi(fetchTweetsObject)
-        QtCore.QMetaObject.connectSlotsByName(fetchTweetsObject)
 
-        self.pushButton.clicked.connect(self.fetchTweets)
-        self.pushButton_2.clicked.connect(self.stopFetchingTweets)
+    def outputFileSupplied(self, string):
+        self.outputFileName = string
+        self.pushButtonSearch.setEnabled(True)
 
     def fetchTweets(self):
-        print("oioi")
+        if not self._active:
+            self._active = True
+           
+            self.pushButtonSearch.setEnabled(False)
+            self.pushButtonStopSearching.setEnabled(True)
+            self.parentWindow.statusBar().setStyleSheet("")
+            self.parentWindow.statusBar().showMessage("")
+
+            QtCore.QTimer.singleShot(0, self.askTwitter)
+        else:
+            self._active = False
+
+    def closeEvent(self, event):
+       self._active = False
+
+    def askTwitter(self):
         
+        querry = self.lineEditQuerry.text()
+
+        api = Twython(APP_KEY, access_token=ACCESS_TOKEN)
+        tweets = []
+     
+        csvFile = open("tweets/" + self.outputFileName + ".csv", 'w', encoding='utf8', newline='')
+        csvWriter = csv.writer(csvFile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+
+        i = 0
+        tweetsCount = 0
+
+        try:
+            while self._active:
+
+                #----------------------------------------------------------------#
+                # STEP 1: Query Twitter
+                # STEP 2: Save the returned tweets
+                # STEP 3: Get the next max_id
+                #----------------------------------------------------------------#
+
+                # STEP 1: Query Twitter
+                if(0 == i):
+
+                    # Query twitter for data. 
+                    results = api.search(q=querry, count='100', lang='pt')
+            
+                else:
+                    # After the first call we should have max_id from result of previous call. Pass it in query.
+                    results = api.search(q=querry, include_entities='true', max_id=next_max_id, lang='pt')
+
+                # STEP 2: Save the returned tweets
+                for result in results['statuses']:
+
+                    tweet_text = preProcessTweetText (result['text'])
+                    created_at = result["created_at"]
+                    retweet_count = result["retweet_count"]
+            
+                    if not tweet_text in tweets:
+                        tweets.append(tweet_text)
+                        csvWriter.writerow(['|'+str(created_at)+'|', '|'+str(retweet_count)+'|', '|'+tweet_text+'|'])
+                        tweetsCount += 1
+                        sleep(0.05)
+                        self.lineEditTweetsCount.setText(str(tweetsCount))
+                        QtGui.qApp.processEvents()
+
+                        if not self._active:
+                            break
+                        
+                # STEP 3: Get the next max_id
+                try:
+                    # Parse the data returned to get max_id to be passed in consequent call.
+                    next_results_url_params = results['search_metadata']['next_results']
+                    next_max_id = next_results_url_params.split('max_id=')[1].split('&')[0]
+                except:
+                    
+                    sleep(60 * 15)
+                    continue
+                    
+                i += 1
+
+        finally:
+            csvFile.close()
 
     def stopFetchingTweets(self):
-        self.mainWindow.statusBar().setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-        self.mainWindow.statusBar().showMessage("Finished loading tweets")
-
-    def retranslateUi(self, fetchTweetsObject):
-        fetchTweetsObject.setWindowTitle(_translate("fetchTweetsObject", "Fetch Tweets", None))
-
+        if self._active:
+            self._active = False
+            self.pushButtonStopSearching.setEnabled(False)
+            self.parentWindow.statusBar().setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.parentWindow.statusBar().showMessage("Finished loading tweets")

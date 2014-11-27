@@ -25,12 +25,14 @@
     <Compile Include="EventAnalyser.py" />
     <Compile Include="FetchTweets.py" />
     <Compile Include="MainWindow.py" />
-    <Compile Include="SearchingTwitter.py">
+    <Compile Include="TwyithonParams.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TextUtils.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ui_FetchTweets.py" />
+    <Compile Include="Ui_MainWindow.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
