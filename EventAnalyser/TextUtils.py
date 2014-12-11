@@ -16,7 +16,7 @@ def preProcessTweetText(tweetText):
 
     #Replace #word with word
     tweetText = re.sub(r'#([^\s]+)', r'\1', tweetText)
-
+    
     #trim
     tweetText = tweetText.strip('\'"')
 

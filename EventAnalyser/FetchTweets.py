@@ -6,6 +6,8 @@ from time import sleep
 from TwyithonParams import *
 from TextUtils import preProcessTweetText
 import csv
+import pickle
+import re
 
 class FetchTweets(QWidget, Ui_fetchTweetsObject):
 
@@ -48,12 +50,24 @@ class FetchTweets(QWidget, Ui_fetchTweetsObject):
     def closeEvent(self, event):
        self._active = False
 
+    def addHashTags(self, hashTags, hashTagsList):
+
+        for hashTag in hashTagsList:
+
+            hashTag = hashTag.lower()
+            if hashTag in hashTags:
+                hashTags[hashTag] += 1
+            else:
+                hashTags[hashTag] = 1
+
+
     def askTwitter(self):
-        
+
         querry = self.lineEditQuerry.text()
 
         api = Twython(APP_KEY, access_token=ACCESS_TOKEN)
         tweets = []
+        hashTags = {}
      
         csvFile = open("tweets/" + self.outputFileName + ".csv", 'w', encoding='utf8', newline='')
         csvWriter = csv.writer(csvFile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
@@ -83,6 +97,11 @@ class FetchTweets(QWidget, Ui_fetchTweetsObject):
                 # STEP 2: Save the returned tweets
                 for result in results['statuses']:
 
+                    tweet_text = result['text']
+                    hashTagsList = re.findall(r"#([^\s]+)", tweet_text)
+                    if len(hashTagsList):
+                        self.addHashTags(hashTags, hashTagsList)
+
                     tweet_text = preProcessTweetText (result['text'])
                     created_at = result["created_at"]
                     retweet_count = result["retweet_count"]
@@ -111,7 +130,11 @@ class FetchTweets(QWidget, Ui_fetchTweetsObject):
                 i += 1
 
         finally:
+            
             csvFile.close()
+            with open("tweets/" + self.outputFileName + "HashTags.txt", 'wb') as handle:
+                pickle.dump(hashTags, handle)
+            #json.dump(hashTags, open("tweets/" + self.outputFileName + "HashTags.txt", 'w'))
 
     def stopFetchingTweets(self):
         if self._active:
