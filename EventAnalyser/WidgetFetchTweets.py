@@ -1,7 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
-from Ui_FetchTweets import Ui_fetchTweetsObject
+from Ui_WidgetFetchTweets import Ui_widgetFetchTweets
 from time import sleep
 from TwyithonParams import *
 from TextUtils import preProcessTweetText
@@ -9,7 +9,7 @@ import csv
 import pickle
 import re
 
-class FetchTweets(QWidget, Ui_fetchTweetsObject):
+class WidgetFetchTweets(QWidget, Ui_widgetFetchTweets):
 
     def __init__(self, parentWindow):
 
@@ -28,7 +28,7 @@ class FetchTweets(QWidget, Ui_fetchTweetsObject):
         self._active = False
         self.pushButtonSearch.setEnabled(False)
         self.pushButtonStopSearching.setEnabled(False)
-
+        
 
     def outputFileSupplied(self, string):
         self.outputFileName = string
@@ -37,7 +37,7 @@ class FetchTweets(QWidget, Ui_fetchTweetsObject):
     def fetchTweets(self):
         if not self._active:
             self._active = True
-           
+
             self.pushButtonSearch.setEnabled(False)
             self.pushButtonStopSearching.setEnabled(True)
             self.parentWindow.statusBar().setStyleSheet("")

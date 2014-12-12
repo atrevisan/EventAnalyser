@@ -23,7 +23,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EventAnalyser.py" />
-    <Compile Include="FetchTweets.py" />
+    <Compile Include="WidgetAnalyseTweets.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WidgetFetchTweets.py" />
     <Compile Include="MainWindow.py" />
     <Compile Include="TwyithonParams.py">
       <SubType>Code</SubType>
@@ -31,8 +34,10 @@
     <Compile Include="TextUtils.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Ui_FetchTweets.py" />
     <Compile Include="Ui_MainWindow.py" />
+    <Compile Include="Ui_WidgetAnalyseTweets.py" />
+    <Compile Include="Ui_WidgetFetchTweets.py" />
+    <Compile Include="Ui_WidgetWordCloud.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

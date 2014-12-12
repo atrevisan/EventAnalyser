@@ -13,7 +13,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from Ui_MainWindow import Ui_MainWindowObject
-from FetchTweets import FetchTweets
+from WidgetFetchTweets import WidgetFetchTweets
+from WidgetAnalyseTweets import WidgetAnalyseTweets
 
 class MainWindow(QMainWindow, Ui_MainWindowObject):
     def __init__(self):
@@ -28,11 +29,13 @@ class MainWindow(QMainWindow, Ui_MainWindowObject):
 
     def addFetchTweetsWidget(self):
 
-        fetchTweetsWidget = FetchTweets(self)
-        self.setCentralWidget(fetchTweetsWidget)
+        widgetFetchTweets = WidgetFetchTweets(self)
+        self.setCentralWidget(widgetFetchTweets)
 
     def addAnalyseTweetsWidget(self):
-        print("oi")
+
+        widgetAnalyseTweets = WidgetAnalyseTweets()
+        self.setCentralWidget(widgetAnalyseTweets)
 
 # Main entry to program.  Sets up the main app and create a new window.
 def main(argv):
