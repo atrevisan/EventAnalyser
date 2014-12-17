@@ -1,3 +1,4 @@
 /EventAnalyser/*.csv
 tweets
 /EventAnalyser/__pycache__
+/EventAnalyser/EventAnalyser.pyproj
