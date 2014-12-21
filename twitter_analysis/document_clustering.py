@@ -56,7 +56,6 @@ if len(args) > 0:
     op.error("this script takes no arguments.")
     sys.exit(1)
 
-
 ###############################################################################
 # Load some categories from the training set
 categories = [
