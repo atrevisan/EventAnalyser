@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>widgetAnalyseTweets</class>
- <widget class="QWidget" name="widgetAnalyseTweets">
+ <class>widget_analyse_tweets</class>
+ <widget class="QWidget" name="widget_analyse_tweets">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,8 +15,8 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QWidget" name="widgetMainWidget" native="true">
-     <widget class="QComboBox" name="comboBoxTweets">
+    <widget class="QWidget" name="widget_main_widget" native="true">
+     <widget class="QComboBox" name="combo_box_datasets">
       <property name="geometry">
        <rect>
         <x>140</x>
@@ -44,7 +44,7 @@
        <string>Number of clusters:</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButtonClusterize">
+     <widget class="QPushButton" name="button_clusterize">
       <property name="geometry">
        <rect>
         <x>620</x>
@@ -75,7 +75,7 @@
        <string>Twitter dataset:</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditClusters">
+     <widget class="QLineEdit" name="line_edit_clusters">
       <property name="geometry">
        <rect>
         <x>530</x>
@@ -94,58 +94,58 @@
         <height>291</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="vLayoutButtons">
+      <layout class="QVBoxLayout" name="vlayout_buttons">
        <item>
-        <widget class="QPushButton" name="pushButtonWordCloud">
+        <widget class="QPushButton" name="button_word_cloud">
          <property name="text">
           <string>Wordcloud</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonSentiment">
+        <widget class="QPushButton" name="button_sentiment">
          <property name="text">
           <string>Sentiment</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonRelevantTweets">
+        <widget class="QPushButton" name="button_relevant_tweets">
          <property name="text">
           <string>Relevant tweets</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonNGrams">
+        <widget class="QPushButton" name="button_n_grams">
          <property name="text">
           <string>N-grams</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonWordCloudPerCluster">
+        <widget class="QPushButton" name="button_wordcloud_per_cluster">
          <property name="text">
           <string>Wordcloud per cluster</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonSentimentPerCluster">
+        <widget class="QPushButton" name="button_sentiment_per_cluster">
          <property name="text">
           <string>Sentiment per cluster</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonRelevantTweetsPerCluster">
+        <widget class="QPushButton" name="button_relevant_tweets_per_cluster">
          <property name="text">
           <string>Relevant tweets per cluster</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonNGramsPerCluster">
+        <widget class="QPushButton" name="button_n_grams_per_cluster">
          <property name="text">
           <string>N-grams per cluster</string>
          </property>
@@ -162,7 +162,7 @@
         <height>391</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="vLayoutContents"/>
+      <layout class="QVBoxLayout" name="vLayoutContent"/>
      </widget>
     </widget>
    </item>

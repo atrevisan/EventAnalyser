@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindowObject</class>
- <widget class="QMainWindow" name="MainWindowObject">
+ <class>main_window</class>
+ <widget class="QMainWindow" name="main_window">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Twitter Event Analyser</string>
+   <string>Twitter text analyser</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="widget_central_widget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -23,24 +23,24 @@
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuEvent_Analysis">
+   <widget class="QMenu" name="menu_text_analysis">
     <property name="title">
-     <string>Event Analysis</string>
+     <string>Text analysis</string>
     </property>
-    <addaction name="actionFetch_Tweets"/>
-    <addaction name="actionAnalyse_Tweets"/>
+    <addaction name="action_fetch_tweets"/>
+    <addaction name="action_analyse_tweets"/>
    </widget>
-   <addaction name="menuEvent_Analysis"/>
+   <addaction name="menu_text_analysis"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionFetch_Tweets">
+  <action name="action_fetch_tweets">
    <property name="text">
-    <string>Fetch Tweets</string>
+    <string>Fetch tweets</string>
    </property>
   </action>
-  <action name="actionAnalyse_Tweets">
+  <action name="action_analyse_tweets">
    <property name="text">
-    <string>Analyse Tweets</string>
+    <string>Analyse tweets</string>
    </property>
   </action>
  </widget>
