@@ -1,3 +1,4 @@
 /twitter_analysis/__pycache__
 /twitter_analysis/twitter_analysis.pyproj
 *.db
+*.pyc
