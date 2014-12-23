@@ -5,27 +5,36 @@
 
 from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
-from gui.ui_widget_fetch_tweets import Ui_widget_fetch_tweets
+
+from core.gui.ui_widget_fetch_tweets import Ui_widget_fetch_tweets
+from core.textutils.text_pre_processing import pre_process_tweet_text
+
 from twython import Twython
 from time import sleep
-from textutils.text_pre_processing import pre_process_tweet_text 
 
 import csv
 import pickle
 import re
+import os
 
 class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
-    """Widget fetch tweets that correspond to a given search querry from Twitter.
+    """This widget contain gui elements for fetching tweets that correspond to a given search querry.
             
     Parameters
     ----------
     main_window : MainWindow
-        A reference for the application main window so it cans change the status bar.
+        A reference for the application main window so it can change the status bar.
 
     Atributes
     -------
     _active : Boolean
         It keeps the fetching process state.
+
+    hashtags : dict
+        map hashtags to frequencies.
+
+    tweets : list of tuples
+        store tweets in the form (created_at, retweet_count, tweet_text).
     """
     def __init__(self, main_window):
 
@@ -35,7 +44,9 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
-        self.button_save_tweets.setIcon(QtGui.QIcon(QtGui.QPixmap("gui\Save.png")))
+        self.button_save_tweets.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\save.png")))
+        self.button_fetch_tweets.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\mg.png")))
+        self.button_stop_fetching.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\stop.png")))
 
         # custom event handling
         self.button_fetch_tweets.clicked.connect(self.fetch_tweets)
@@ -63,14 +74,11 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
     def closeEvent(self, event):
        self._active = False
 
-    def add_hashtags(self, hashtags, hashtags_list):
+    def add_hashtags(self, hashtags_list):
         """Add hashtags from a given tweet to a dict mapping hashtags to frequencies.
            
         Parameters
         ----------
-        hashtags : dict
-            map hashtags to frequencies
-
         hashtags_list : list
             hashtags from a given tweet
         """
@@ -78,19 +86,18 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         for hashtag in hashtags_list:
 
             hashtag = hashtag.lower()
-            if hashtag in hashtags:
-                hashtags[hashtag] += 1
+            if hashtag in self.hashtags:
+                self.hashtags[hashtag] += 1
             else:
-                hashtags[hashtag] = 1
+                self.hashtags[hashtag] = 1
 
 
     def ask_twitter(self):
-        """Widget fetch tweets that correspond to a given search querry from Twitter.
+        """It fetches the tweets that correspond to a given search querry supplied by the user.
         
-        It uses the Twithon api for fetching tweets and stores the retrived tweets to a csv file
-        in the format: (date, retweets_count, tweet_text). It also sores a file containing hashtag
-        counts.    
-
+        It uses the Twithon api for fetching tweets. The tweets are fetched in a paginated fashion.
+        Calls the pre_process_tweet_text() and add_hashtags() functions.
+        
         Parameters
         ----------
         self
@@ -98,18 +105,17 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
         querry = self.line_edit_querry.text()
 
-        with open('twithon_params.txt', 'rb') as handle:
+        # get twitter developer key and access token, they are required for buiulding 
+        # an application that access twitter data
+        with open(os.getcwd() + '\\core\\gui\\twithon_params.txt', 'rb') as handle:
             twithon_params = pickle.loads(handle.read())
         
         api = Twython(twithon_params['APP_KEY'], access_token=twithon_params['ACCESS_TOKEN'])
         
         self.tweets = []
         tweet_text_list = []
-        hashtags = {}
+        self.hashtags = {}
      
-        #csvFile = open("tweets/" + self.outputFileName + ".csv", 'w', encoding='utf8', newline='')
-        #csvWriter = csv.writer(csvFile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-
         i = 0
         tweet_count = 0
 
@@ -139,17 +145,18 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
                     hashtags_list = re.findall(r"#([^\s]+)", tweet_text)
 
                     if len(hashtags_list):
-                        self.add_hashtags(hashtags, hashtags_list)
+                        self.add_hashtags(hashtags_list)
 
                     tweet_text = pre_process_tweet_text(result['text'])
                     created_at = result["created_at"]
                     retweet_count = result["retweet_count"]
             
-                    tweet = (created_at, retweet_count, tweet_text)
-
                     if not tweet_text in tweet_text_list:
+                        
+                        tweet_text_list.append(tweet_text)
+                        tweet = (created_at, retweet_count, tweet_text)
                         self.tweets.append(tweet)
-                        #csvWriter.writerow(['|'+str(created_at)+'|', '|'+str(retweet_count)+'|', '|'+tweet_text+'|'])
+
                         tweet_count += 1
                         sleep(0.05)
                         self.line_edit_tweet_count.setText(str(tweet_count))
@@ -172,18 +179,37 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
         finally:
             pass
-            #csvFile.close()
-            #with open("tweets/" + self.outputFileName + "HashTags.txt", 'wb') as handle:
-            #    pickle.dump(hashTags, handle)
-            ##json.dump(hashTags, open("tweets/" + self.outputFileName + "HashTags.txt", 'w'))
-
+           
     def stop_fetching(self):
+        """It stops the fetching process in response for a click event and updates the status bar.
+ 
+        Parameters
+        ----------
+        self
+        """
         if self._active:
             self._active = False
             self.main_window.statusBar().setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             self.main_window.statusBar().showMessage("Finished fetching tweets")
 
     def save_tweets(self):
-        
-        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save data", "tweets/", "*.csv")
-        print(file_name)
+        """It saves the fetched tweets to the user chosen location in response for a click event.
+ 
+        It stores the retrived tweets to a csv file in the format: (date, retweets_count, tweet_text). 
+        It also stores a file containing hashtag counts in a dict format.
+
+        Parameters
+        ----------
+        self
+        """
+             
+        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save data", os.getcwd() + "\\tweets\\", "*.csv")
+        csv_file = open(file_name + ".csv", 'w', encoding='utf8', newline='')
+        csv_writer = csv.writer(csv_file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+
+        for tweet in self.tweets:
+            csv_writer.writerow(['|'+str(tweet[0])+'|', '|'+str(tweet[1])+'|', '|'+tweet[2]+'|'])
+        csv_file.close()
+           
+        with open(file_name + "_hashtags.txt", 'wb') as handle:
+            pickle.dump(self.hashtags, handle)

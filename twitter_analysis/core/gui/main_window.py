@@ -4,8 +4,8 @@
 # License: MIT
 
 from PyQt4.QtGui import QMainWindow
-from gui.ui_main_window import Ui_main_window
-from gui.widget_fetch_tweets import WidgetFetchTweets
+from core.gui.ui_main_window import Ui_main_window
+from core.gui.widget_fetch_tweets import WidgetFetchTweets
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -22,9 +22,13 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_analyse_tweets.triggered.connect(self.add_widget_analyse_tweets)
 
     def add_widget_fetch_tweets(self):
+        """Replaces the current widget for a new fetch tweets widget.
         
-        widgetFetchTweets = WidgetFetchTweets(self)
-        self.setCentralWidget(widgetFetchTweets)
+        The fetch tweets widget contain gui elements for making Twitter searches.
+        """
+
+        widget_fetch_tweets = WidgetFetchTweets(self)
+        self.setCentralWidget(widget_fetch_tweets)
 
     def add_widget_analyse_tweets(self):
         pass

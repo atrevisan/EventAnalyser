@@ -8,7 +8,7 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from gui.main_window import MainWindow
+from core.gui.main_window import MainWindow
 
 # Main entry to the program.  Sets up the main app and create a new window.
 def main(argv):
