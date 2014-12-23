@@ -172,12 +172,14 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
                     next_max_id = next_results_url_params.split('max_id=')[1].split('&')[0]
                 except:
                     
-                    sleep(60 * 15)
+                    print ("Nothing to fetch")
+                    sleep(60)
                     continue
                     
                 i += 1
 
         finally:
+            print ("Finish fetching")
             pass
            
     def stop_fetching(self):

@@ -2,3 +2,5 @@
 /twitter_analysis/twitter_analysis.pyproj
 *.db
 *.pyc
+*.sln
+*.suo
