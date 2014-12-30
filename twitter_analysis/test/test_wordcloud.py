@@ -4,6 +4,7 @@ import numpy as np
 from nose.tools import assert_equal, assert_greater, assert_true, assert_raises
 from numpy.testing import assert_array_equal
 from PIL import Image
+import PIL
 import matplotlib.pyplot as plt
 from tempfile import NamedTemporaryFile
 import os
@@ -39,24 +40,25 @@ def test_simple():
     plt.imshow(wordcloud)
     plt.axis("off")
     plt.show()
+    
 
 def test_simple_2():
     # Generating a square wordcloud
 
     raw_documents = ["O rato roeu", 
                      "O rato roeu a roupa",  
-                     "A roupa é bonita",  
+                     "A roupa Ã© bonita",  
                      "papai noel chegou", 
                      "Feliz natal pessoal",
                      "O rato come queijo", 
                      "Zip Zap Zum ele vai para lugar nenhum", 
-                     "Não a lugar como o lar", 
+                     "NÃ£o a lugar como o lar", 
                      "O rato morreu no natal",
-                     "O natal é amanha"] 
+                     "O natal Ã© amanha"] 
 
 
     wordcloud = WordCloud().generate(raw_documents=raw_documents)
-    wordcloud.to_file(os.getcwd() + r"\wordclouds\wc1.png")
+    wordcloud.to_file(os.getcwd() + r"\wordclouds\wc3.png")
 
 def test_default():
     # test that default word cloud creation and conversions work

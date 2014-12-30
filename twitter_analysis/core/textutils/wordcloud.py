@@ -9,6 +9,7 @@ import re
 import sys
 import numpy as np
 from operator import itemgetter
+from time import time
 
 from PIL import Image
 from PIL import ImageDraw
@@ -80,10 +81,10 @@ class WordCloud(object):
         Defaults to DroidSansMono path on a Linux machine. If you are on
         another OS or don't have this font, you need to adjust this path.
 
-    width : int (default=400)
+    width : int (default=40)
         Width of the canvas.
 
-    height : int (default=200)
+    height : int (default=20)
         Height of the canvas.
 
     ranks_only : boolean (default=False)
@@ -121,8 +122,8 @@ class WordCloud(object):
         size, position, orientation and color.
     """
 
-    def __init__(self, font_path=None, width=400, height=200, margin=5,
-                 ranks_only=False, prefer_horizontal=0.9, mask=None, scale=1,
+    def __init__(self, font_path=None, width=110, height=70, margin=5,
+                 ranks_only=False, prefer_horizontal=0.9, mask=None, scale=5,
                  color_func=random_color_func, max_words=20, stopwords=None,
                  random_state=None, background_color='black', max_font_size=None):
         if stopwords is None:
@@ -359,8 +360,13 @@ class WordCloud(object):
             fe = FeatureExtractor(raw_documents)
             doc_term_matrix, vocabulary = fe.count_vectorizer()
 
-            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix)
+            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix, number_of_terms=self.max_words)
+
+            print ("Fitting words")
+            t0 = time()
             self.fit_words(self.words_)
+            print("done in %fs" % (time() - t0))
+
             return self
         else:
             raise ValueError("text string or list of documents must be supplied.")

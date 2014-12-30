@@ -100,4 +100,7 @@ class FeatureExtractor:
         #sort from largest to smallest
         top_terms = sorted (freqs, key = lambda x: -x[1])
 
-        return top_terms
+        for i, (term, weight) in enumerate(top_terms[:number_of_terms]):
+            print ("%d: word: %s, weight: %s" % (i, term, weight))
+
+        return top_terms[:number_of_terms]

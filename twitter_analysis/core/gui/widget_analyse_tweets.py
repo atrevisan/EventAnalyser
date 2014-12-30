@@ -15,21 +15,18 @@ import csv
 import sys
 
 class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
-    """This widget contain gui elements for displaying text analyses over Twitter text data.
+    """This widget contain gui elements for displaying text analysis over Twitter text data.
     
     The textual analysis include: sentiment analysis (proportion of positive and negative sentiment), 
     cluster analysis, wordclouds and statiscal information about ngram distribution along time.        
-
-    Parameters
-    ----------
     
     Atributes
     -------
     hashtags : dict
-        map hashtags to frequencies.
+        Map hashtags to frequencies.
 
     tweets : list of tuples
-        store tweets in the form (created_at, retweet_count, tweet_text).
+        Store tweets in the form (created_at, retweet_count, tweet_text).
     """
     def __init__(self):
 
@@ -46,7 +43,7 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         self.button_wordcloud.clicked.connect(self.add_wordcloud_widget)
 
     def open_tweets_file(self):
-        """Open a csv file containing Twitter text data that will be analysed in response for a click event.
+        """Open a csv file containing Twitter text data that will be analysed in response of a click event.
         
         Notes
         -------
@@ -68,10 +65,11 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
             self.hashtags = pickle.loads(handle.read())
 
     def add_wordcloud_widget(self):
-        """Adds the wordcloud widget to the main layout in response of a click event."""
+        """Add the wordcloud widget to the main layout in response of a click event."""
         
         self.clear_layout()
-        widget_wordcloud = WidgetWordcloud()
+        tweets = [t[2] for t in self.tweets]
+        widget_wordcloud = WidgetWordcloud(tweets)
         self.vlayout_content.addWidget(widget_wordcloud)
 
     def clear_layout(self):
