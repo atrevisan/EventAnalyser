@@ -6,6 +6,7 @@
 from PyQt4.QtGui import QMainWindow
 from core.gui.ui_main_window import Ui_main_window
 from core.gui.widget_fetch_tweets import WidgetFetchTweets
+from core.gui.widget_analyse_tweets import WidgetAnalyseTweets
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -31,8 +32,11 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.setCentralWidget(widget_fetch_tweets)
 
     def add_widget_analyse_tweets(self):
-        pass
-        #widgetAnalyseTweets = WidgetAnalyseTweets()
-        #self.setCentralWidget(widgetAnalyseTweets)
-
-
+        """Replaces the current widget for a new analyse tweets widget.
+        
+        The analyse tweets widget contains gui elements for making text analysis
+        over Twitter text data.
+        """
+       
+        widget_analyse_tweets = WidgetAnalyseTweets()
+        self.setCentralWidget(widget_analyse_tweets)

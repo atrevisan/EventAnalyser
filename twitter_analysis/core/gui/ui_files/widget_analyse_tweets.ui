@@ -16,21 +16,11 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QWidget" name="widget_main_widget" native="true">
-     <widget class="QComboBox" name="combo_box_datasets">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>30</y>
-        <width>131</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>27</y>
+        <x>361</x>
+        <y>28</y>
         <width>155</width>
         <height>22</height>
        </rect>
@@ -60,8 +50,8 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>11</x>
-        <y>27</y>
+        <x>12</x>
+        <y>21</y>
         <width>122</width>
         <height>22</height>
        </rect>
@@ -78,9 +68,9 @@
      <widget class="QLineEdit" name="line_edit_clusters">
       <property name="geometry">
        <rect>
-        <x>530</x>
-        <y>30</y>
-        <width>51</width>
+        <x>523</x>
+        <y>28</y>
+        <width>41</width>
         <height>22</height>
        </rect>
       </property>
@@ -96,7 +86,7 @@
       </property>
       <layout class="QVBoxLayout" name="vlayout_buttons">
        <item>
-        <widget class="QPushButton" name="button_word_cloud">
+        <widget class="QPushButton" name="button_wordcloud">
          <property name="text">
           <string>Wordcloud</string>
          </property>
@@ -162,7 +152,36 @@
         <height>391</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="vLayoutContent"/>
+      <layout class="QVBoxLayout" name="vlayout_content"/>
+     </widget>
+     <widget class="QPushButton" name="button_open_file">
+      <property name="geometry">
+       <rect>
+        <x>141</x>
+        <y>21</y>
+        <width>41</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>open</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../assets/open.png</normaloff>../assets/open.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>41</width>
+        <height>28</height>
+       </size>
+      </property>
      </widget>
     </widget>
    </item>

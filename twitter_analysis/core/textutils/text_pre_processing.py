@@ -34,10 +34,10 @@ def pre_process_tweet_text(tweet_text):
     #Replace #word with word
     tweet_text = re.sub(r'#([^\s]+)', r'\1', tweet_text)
     
-    #trim
+    #Trim
     tweet_text = tweet_text.strip('\'"')
 
-    # removing other uninformative characters
+    # Removing other uninformative characters
     tweet_text = tweet_text.replace('\n', '')
     tweet_text = tweet_text.replace('\'', '')
     tweet_text = tweet_text.replace('\"', '')
@@ -51,9 +51,37 @@ def pre_process_tweet_text(tweet_text):
     tweet_text = tweet_text.replace(',', '')
     tweet_text = tweet_text.replace('/', '')
 
-    #look for 2 or more repetitions of character
+    #Look for 2 or more repetitions of character
     pattern = re.compile(r"(.)\1{1,}", re.DOTALL) 
     tweet_text = pattern.sub(r"\1\1", tweet_text)
     
     return tweet_text
 #end
+
+def get_stopwords_list(stopwords_filename):
+    """Read stopwords from txt file to a list
+    
+    Parameters
+    -------
+    stopwords_filename : string
+        path to a txt file containing stopwords
+
+    Returns
+    -------
+    stopwords : list
+        list containing stopwords
+    """
+    
+    stopwords = []
+    stopwords.append('at_user')
+    stopwords.append('url')
+    stopwords.append('rt')
+
+    with open(stopwords_filename, 'r') as f:
+        
+        line = f.readline()
+        while line:
+            word = line.strip()
+            stopwords.append(word)
+            line = f.readline()
+        return stopwords

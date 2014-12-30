@@ -1,7 +1,6 @@
-# Author: Andreas Christian Mueller <amueller@ais.uni-bonn.de>
-# (c) 2012
-# Modified by: Paul Nechifor <paul@nechifor.net>
-#
+# Author: Allan Caminha Trevisan <allan.trvsn@gmail.com>
+# (c) 2014
+# adapted from: https://github.com/amueller/word_cloud
 # License: MIT
 
 from random import Random
@@ -14,13 +13,15 @@ from operator import itemgetter
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from query_integral_image import query_integral_image
+
+from core.textutils.text_pre_processing import get_stopwords_list
+from core.textutils.feature_extraction import FeatureExtractor
+
 
 item1 = itemgetter(1)
 
-FONT_PATH = r"C:\Users\Allan\Desktop\PYTHON_TESTING\arial.ttf"
-STOPWORDS = set(["the", "a", "it"])
-
+FONT_PATH = os.getcwd() +  r"\core\textutils\arial.ttf"
+STOPWORDS = get_stopwords_list(os.getcwd() + r"\core\textutils\stopwords.txt")
 
 def random_color_func(word, font_size, position, orientation, random_state=None):
     """Random hue color generation.
@@ -39,6 +40,34 @@ def random_color_func(word, font_size, position, orientation, random_state=None)
     if random_state is None:
         random_state = Random()
     return "hsl(%d, 80%%, 50%%)" % random_state.randint(0, 255)
+
+def query_integral_image(integral_image, size_x, size_y, random_state):
+    x = integral_image.shape[0]
+    y = integral_image.shape[1]
+    
+    hits = 0
+
+    # count how many possible locations
+    for i in range(x - size_x):
+        for j in range(y - size_y):
+            area = integral_image[i, j] + integral_image[i + size_x, j + size_y]
+            area -= integral_image[i + size_x, j] + integral_image[i, j + size_y]
+            if not area:
+                hits += 1
+    if not hits:
+        # no room left
+        return None
+    # pick a location at random
+    goal = random_state.randint(0, hits)
+    hits = 0
+    for i in range(x - size_x):
+        for j in range(y - size_y):
+            area = integral_image[i, j] + integral_image[i + size_x, j + size_y]
+            area -= integral_image[i + size_x, j] + integral_image[i, j + size_y]
+            if not area:
+                hits += 1
+                if hits == goal:
+                    return i, j
 
 
 class WordCloud(object):
@@ -69,7 +98,7 @@ class WordCloud(object):
         entries will be deemed occupied. If mask is not None, width and height will be
         ignored and the shape of mask will be used instead.
 
-    max_words : number (default=200)
+    max_words : number (default=20)
         The maximum number of words.
 
     stopwords : set of strings
@@ -94,7 +123,7 @@ class WordCloud(object):
 
     def __init__(self, font_path=None, width=400, height=200, margin=5,
                  ranks_only=False, prefer_horizontal=0.9, mask=None, scale=1,
-                 color_func=random_color_func, max_words=200, stopwords=None,
+                 color_func=random_color_func, max_words=20, stopwords=None,
                  random_state=None, background_color='black', max_font_size=None):
         if stopwords is None:
             stopwords = STOPWORDS
@@ -232,6 +261,8 @@ class WordCloud(object):
         self.layout_ = list(zip(words, font_sizes, positions, orientations, colors))
         return self.layout_
 
+    # nao faz sentido para mim preciso criar meu proprio counter
+    # talvez a parte de merge de plurais seja interessante pro classificador e clustering
     def process_text(self, text):
         """Splits a long text into words, eliminates the stopwords.
 
@@ -299,18 +330,41 @@ class WordCloud(object):
 
         return words
 
-    def generate(self, text):
-        """Generate wordcloud from text.
+    def generate(self, text=None, raw_documents=None):
+        """Generate a wordcloud.
 
         Calls process_text and fit_words.
+
+        Parameters
+        ----------
+        text : string
+            Generate wordcloud from plain text.
+
+        raw_documents : list
+            Generate wordcloud from list of documents
 
         Returns
         -------
         self
         """
-        self.process_text(text)
-        self.fit_words(self.words_)
-        return self
+
+        if text:
+            self.process_text(text)
+            self.fit_words(self.words_)
+            return self
+
+        elif raw_documents:
+
+            # Extract features using a count vectorizer
+            fe = FeatureExtractor(raw_documents)
+            doc_term_matrix, vocabulary = fe.count_vectorizer()
+
+            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix)
+            self.fit_words(self.words_)
+            return self
+        else:
+            raise ValueError("text string or list of documents must be supplied.")
+            
 
     def _check_generated(self):
         """Check if layout_ was computed, otherwise raise error."""

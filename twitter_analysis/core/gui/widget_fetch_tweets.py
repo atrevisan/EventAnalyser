@@ -44,6 +44,8 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
+
+        # for some reason not loading icons correctly inside designer
         self.button_save_tweets.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\save.png")))
         self.button_fetch_tweets.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\mg.png")))
         self.button_stop_fetching.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\stop.png")))
@@ -159,6 +161,8 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
                         tweet_count += 1
                         sleep(0.05)
+
+                        # update gui
                         self.line_edit_tweet_count.setText(str(tweet_count))
                         QtGui.qApp.processEvents()
 
@@ -180,7 +184,6 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
 
         finally:
             print ("Finish fetching")
-            pass
            
     def stop_fetching(self):
         """It stops the fetching process in response for a click event and updates the status bar.
@@ -206,7 +209,7 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         """
              
         file_name = QtGui.QFileDialog.getSaveFileName(self, "Save data", os.getcwd() + "\\tweets\\", "*.csv")
-        csv_file = open(file_name + ".csv", 'w', encoding='utf8', newline='')
+        csv_file = open(file_name + ".csv", 'w', newline='', encoding="utf-8")
         csv_writer = csv.writer(csv_file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
 
         for tweet in self.tweets:
