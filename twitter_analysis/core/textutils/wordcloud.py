@@ -360,7 +360,7 @@ class WordCloud(object):
             fe = FeatureExtractor(raw_documents)
             doc_term_matrix, vocabulary = fe.count_vectorizer()
 
-            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix, number_of_terms=self.max_words)
+            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix, max_words=self.max_words)
 
             print ("Fitting words")
             t0 = time()
