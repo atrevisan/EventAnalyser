@@ -13,14 +13,14 @@ if os.getcwd() not in sys.path:
 from core.textutils.wordcloud import WordCloud
 
 DOCUMENTS = ['O rato roeu a roupa do rei de roma',
-             'O rato é um mau carater',
-             'A roupa do rei é legal', 
-             'O rei é um cara mau',
-             'A roupa é bacana', 
+             'O rato e um mau carater',
+             'A roupa do rei e legal', 
+             'O rei e um rato mau',
+             'A roupa e bacana', 
              'Eu gosto de batata',
-             'Salve o rei da inglaterra!!',
-             'Ratos trazem doenças',
-             'A peste negra é proveniente da pulga do rato']
+             'Salve o rei da inglaterra: o rato!!',
+             'Ratos trazem doencas',
+             'A peste negra foi proveniente da pulga do rato, rato pulguento!!']
 
 class TestWordcloud(unittest.TestCase):
 

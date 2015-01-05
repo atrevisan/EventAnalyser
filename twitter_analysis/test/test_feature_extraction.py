@@ -14,14 +14,14 @@ if os.getcwd() not in sys.path:
 from core.textutils.feature_extraction import FeatureExtractor
 
 DOCUMENTS = ['O rato roeu a roupa do rei de roma',
-             'O rato é um mau carater',
-             'A roupa do rei é legal', 
-             'O rei é um rato mau',
-             'A roupa é bacana', 
+             'O rato e um mau carater',
+             'A roupa do rei e legal', 
+             'O rei e um rato mau',
+             'A roupa e bacana', 
              'Eu gosto de batata',
              'Salve o rei da inglaterra: o rato!!',
-             'Ratos trazem doenças',
-             'A peste negra é proveniente da pulga do rato, rato pulguento!!']
+             'Ratos trazem doencas',
+             'A peste negra foi proveniente da pulga do rato, rato pulguento!!']
 
 class TestFeatureExtraction(unittest.TestCase):
 
@@ -45,7 +45,16 @@ class TestFeatureExtraction(unittest.TestCase):
 
         # the most common word rato should not
         # be present in more than 50% of the documents
-        X, vocabulary = fe.tfidf_vectorizer()
+        X, vocabulary, feature_names = fe.tfidf_vectorizer()
+
+        for word in feature_names:
+            print(word)
+
+        print()
+        print()
+
+        for word in vocabulary.keys():
+            print(word)
     
         self.assertNotIn("rato", vocabulary.keys())
     
