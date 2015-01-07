@@ -66,7 +66,7 @@ class GenerateClustersDialog(QDialog):
 
         return (labels, top_words_per_cluster)
 
-    # static method to create the dialog and return (date, time, accepted)
+    # static method to create the dialog and return 
     @staticmethod
     def generate_clusters(tweets, k, parent = None):
         """Call procedure that perform clusterization on the tweets.

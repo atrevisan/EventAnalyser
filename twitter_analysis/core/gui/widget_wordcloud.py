@@ -7,7 +7,6 @@ from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
 
 import os
-import os.path
 from time import time
 
 import PIL
@@ -30,8 +29,12 @@ class WidgetWordcloud(QWidget, Ui_widget_wordcloud):
 
     file_name : string
         The file name for the wordcloud that is being generated.
+
+    regenerate_wordcloud : Boolean
+        If a dataset is selected again for clusterization, clusterize the dataset
+        and generate a new wordcloud, otherwize use the already existent wordcloud.
     """
-    def __init__(self, tweets, file_name):
+    def __init__(self, tweets, file_name, regenerate_wordcloud):
 
         QWidget.__init__(self)
         
@@ -40,9 +43,9 @@ class WidgetWordcloud(QWidget, Ui_widget_wordcloud):
 
         filename = os.getcwd() + "\\wordclouds\\" + file_name + ".png"
         
-        if not os.path.isfile(filename): 
+        if regenerate_wordcloud: 
         
-            wordcloud = WordCloud(max_words=30, prefer_horizontal=0.80).generate(raw_documents=tweets)
+            wordcloud = WordCloud(max_words=20, prefer_horizontal=0.80).generate(raw_documents=tweets)
             wordcloud.to_file(filename)
 
         image = QtGui.QImage(filename)

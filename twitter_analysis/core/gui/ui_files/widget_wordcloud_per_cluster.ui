@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>widget_wordcloud</class>
- <widget class="QWidget" name="widget_wordcloud">
+ <class>widget_wordcloud_per_cluster</class>
+ <widget class="QWidget" name="widget_wordcloud_per_cluster">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>11</x>
@@ -52,7 +52,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="combobox_wordcloud"/>
+     <widget class="QComboBox" name="combobox_cluster"/>
     </item>
    </layout>
   </widget>

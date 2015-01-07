@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_wordcloud_per_cluster.ui'
 #
-# Created: Sun Dec 28 10:13:58 2014
+# Created: Wed Jan  7 10:14:40 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,35 +23,35 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_widget_wordcloud(object):
-    def setupUi(self, widget_wordcloud):
-        widget_wordcloud.setObjectName(_fromUtf8("widget_wordcloud"))
-        widget_wordcloud.resize(549, 389)
-        self.label_wordcloud = QtGui.QLabel(widget_wordcloud)
+class Ui_widget_wordcloud_per_cluster(object):
+    def setupUi(self, widget_wordcloud_per_cluster):
+        widget_wordcloud_per_cluster.setObjectName(_fromUtf8("widget_wordcloud_per_cluster"))
+        widget_wordcloud_per_cluster.resize(549, 389)
+        self.label_wordcloud = QtGui.QLabel(widget_wordcloud_per_cluster)
         self.label_wordcloud.setGeometry(QtCore.QRect(0, 50, 551, 341))
         self.label_wordcloud.setStyleSheet(_fromUtf8(""))
         self.label_wordcloud.setText(_fromUtf8(""))
         self.label_wordcloud.setObjectName(_fromUtf8("label_wordcloud"))
-        self.widget = QtGui.QWidget(widget_wordcloud)
-        self.widget.setGeometry(QtCore.QRect(11, 11, 181, 24))
-        self.widget.setObjectName(_fromUtf8("widget"))
-        self.hlayout_clusters = QtGui.QHBoxLayout(self.widget)
+        self.layoutWidget = QtGui.QWidget(widget_wordcloud_per_cluster)
+        self.layoutWidget.setGeometry(QtCore.QRect(11, 11, 181, 24))
+        self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
+        self.hlayout_clusters = QtGui.QHBoxLayout(self.layoutWidget)
         self.hlayout_clusters.setMargin(0)
         self.hlayout_clusters.setObjectName(_fromUtf8("hlayout_clusters"))
-        self.label = QtGui.QLabel(self.widget)
+        self.label = QtGui.QLabel(self.layoutWidget)
         font = QtGui.QFont()
         font.setPointSize(11)
         self.label.setFont(font)
         self.label.setObjectName(_fromUtf8("label"))
         self.hlayout_clusters.addWidget(self.label)
-        self.combobox_wordcloud = QtGui.QComboBox(self.widget)
-        self.combobox_wordcloud.setObjectName(_fromUtf8("combobox_wordcloud"))
-        self.hlayout_clusters.addWidget(self.combobox_wordcloud)
+        self.combobox_cluster = QtGui.QComboBox(self.layoutWidget)
+        self.combobox_cluster.setObjectName(_fromUtf8("combobox_cluster"))
+        self.hlayout_clusters.addWidget(self.combobox_cluster)
 
-        self.retranslateUi(widget_wordcloud)
-        QtCore.QMetaObject.connectSlotsByName(widget_wordcloud)
+        self.retranslateUi(widget_wordcloud_per_cluster)
+        QtCore.QMetaObject.connectSlotsByName(widget_wordcloud_per_cluster)
 
-    def retranslateUi(self, widget_wordcloud):
-        widget_wordcloud.setWindowTitle(_translate("widget_wordcloud", "Form", None))
-        self.label.setText(_translate("widget_wordcloud", "Clusters:", None))
+    def retranslateUi(self, widget_wordcloud_per_cluster):
+        widget_wordcloud_per_cluster.setWindowTitle(_translate("widget_wordcloud_per_cluster", "Form", None))
+        self.label.setText(_translate("widget_wordcloud_per_cluster", "Clusters:", None))
 
