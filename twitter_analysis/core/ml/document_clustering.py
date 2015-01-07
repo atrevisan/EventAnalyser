@@ -117,7 +117,7 @@ class DocumentClustering:
         return top_words_per_cluster
 
     def predict_cluster(self, raw_documents):
-        """Return the index of the cluster each example belongs to.
+        """Return the index of the cluster each trainning example belongs to.
 
         Parameters
         ----------
@@ -148,6 +148,6 @@ class DocumentClustering:
         raw_documents = [(cluster, document) for cluster, document in zip(labels, raw_documents)]
         cluster_ordered_raw_documents = sorted(raw_documents, key=lambda x : x[0])
         cluster_ordered_raw_documents = [x[1] for x in cluster_ordered_raw_documents]
-        print (pandas.DataFrame(cluster_ordered_raw_documents, lines_x, heading))
+        #print (pandas.DataFrame(cluster_ordered_raw_documents, lines_x, heading))
         
         return labels

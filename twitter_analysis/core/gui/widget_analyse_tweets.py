@@ -5,9 +5,11 @@
 
 from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
+from PyQt4.QtGui import QApplication
 
 from core.gui.ui_widget_analyse_tweets import Ui_widget_analyse_tweets
 from core.gui.widget_wordcloud import WidgetWordcloud
+from core.gui.dialog_generate_clusters import GenerateClustersDialog
 
 import os
 import pickle
@@ -27,6 +29,16 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
 
     tweets : list of tuples
         Store tweets in the form (created_at, retweet_count, tweet_text).
+
+    labels : list of int [n_samples]
+        Store the indexes from witch label each tweet belongs to.
+
+    top_words_per_cluster : list of lists of string [k][max_words_per_cluster]
+        Store the top words from each cluster.
+
+    file_name : string
+        Dataset name that is being handle. This is the base name for the raw tweets,
+        hashtags and wordcloud files.
     """
     def __init__(self):
 
@@ -38,10 +50,44 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         # for some reason not loading icons correctly inside designer
         self.button_open_file.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + r"\core\gui\assets\open.png")))
 
+        self.line_edit_clusters.setDisabled(True)
+
+        self.button_clusterize.setDisabled(True)
+        self.button_n_grams.setDisabled(True)
+        self.button_n_grams_per_cluster.setDisabled(True)
+        self.button_relevant_tweets.setDisabled(True)
+        self.button_relevant_tweets_per_cluster.setDisabled(True)
+        self.button_sentiment.setDisabled(True)
+        self.button_sentiment_per_cluster.setDisabled(True)
+        self.button_wordcloud.setDisabled(True)
+        self.button_wordcloud_per_cluster.setDisabled(True)
+        
         # custom event handling
         self.button_open_file.clicked.connect(self.open_tweets_file)
         self.button_wordcloud.clicked.connect(self.add_wordcloud_widget)
+        self.button_clusterize.clicked.connect(self.start_clustering)
 
+ 
+    def start_clustering(self):
+        """Invoke the modal dialog that perform the clustering procedure."""
+
+        k = int(self.line_edit_clusters.text())
+        tweets = [tweet[2] for tweet in self.tweets]
+        
+        self.labels, self.top_words_per_cluster, ok = GenerateClustersDialog.generate_clusters(tweets, k)
+        
+        self.button_clusterize.setDisabled(False)
+        self.button_n_grams.setDisabled(False)
+        self.button_n_grams_per_cluster.setDisabled(False)
+        self.button_relevant_tweets.setDisabled(False)
+        self.button_relevant_tweets_per_cluster.setDisabled(False)
+        self.button_sentiment.setDisabled(False)
+        self.button_sentiment_per_cluster.setDisabled(False)
+        self.button_wordcloud.setDisabled(False)
+        self.button_wordcloud_per_cluster.setDisabled(False)
+
+        self.line_edit_clusters.setText("")
+       
     def open_tweets_file(self):
         """Open a csv file containing Twitter text data that will be analysed in response of a click event.
         
@@ -64,12 +110,17 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         with open(file_name[:-4] + "_hashtags.txt", 'rb') as handle:
             self.hashtags = pickle.loads(handle.read())
 
+        self.line_edit_clusters.setDisabled(False)
+        self.button_clusterize.setDisabled(False)
+        print(file_name)
+        self.file_name = file_name[:-4].split("/tweets/")[1]
+
     def add_wordcloud_widget(self):
         """Add the wordcloud widget to the main layout in response of a click event."""
         
         self.clear_layout()
         tweets = [t[2] for t in self.tweets]
-        widget_wordcloud = WidgetWordcloud(tweets)
+        widget_wordcloud = WidgetWordcloud(tweets, self.file_name)
         self.vlayout_content.addWidget(widget_wordcloud)
 
     def clear_layout(self):

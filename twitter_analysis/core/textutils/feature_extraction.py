@@ -84,7 +84,7 @@ class FeatureExtractor:
         feature_names = count_vect.get_feature_names()
 
         print("done in %fs" % (time() - t0))
-        print("n_samples: %d, n_features: %d" % self.X.shape)
+        print("n_samples: %d, n_features: %d" % X.shape)
         print()
 
         return (X, vocabulary, feature_names)

@@ -358,7 +358,7 @@ class WordCloud(object):
 
             # Extract features using a count vectorizer
             fe = FeatureExtractor(raw_documents)
-            doc_term_matrix, vocabulary = fe.count_vectorizer()
+            doc_term_matrix, vocabulary, feature_names = fe.count_vectorizer()
 
             self.words_ = fe.get_top_words(vocabulary, doc_term_matrix, max_words=self.max_words)
 
