@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
-    <height>389</height>
+    <width>839</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QLabel" name="label_wordcloud">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>50</y>
-     <width>551</width>
-     <height>341</height>
+     <width>801</width>
+     <height>601</height>
     </rect>
    </property>
    <property name="styleSheet">

@@ -122,8 +122,8 @@ class WordCloud(object):
         size, position, orientation and color.
     """
 
-    def __init__(self, font_path=None, width=110, height=70, margin=5,
-                 ranks_only=False, prefer_horizontal=0.9, mask=None, scale=5,
+    def __init__(self, font_path=None, width=190, height=110, margin=5,
+                 ranks_only=False, prefer_horizontal=0.9, mask=None, scale=4,
                  color_func=random_color_func, max_words=20, stopwords=None,
                  random_state=None, background_color='black', max_font_size=None):
         if stopwords is None:
@@ -331,7 +331,7 @@ class WordCloud(object):
 
         return words
 
-    def generate(self, text=None, raw_documents=None):
+    def generate(self, text=None, top_ngrams=None):
         """Generate a wordcloud.
 
         Calls process_text and fit_words.
@@ -341,8 +341,9 @@ class WordCloud(object):
         text : string
             Generate wordcloud from plain text.
 
-        raw_documents : list
-            Generate wordcloud from list of documents
+        top_ngrams : list of (string, number)
+            Generate wordcloud from list of ngrams and
+            associated weight.
 
         Returns
         -------
@@ -354,22 +355,18 @@ class WordCloud(object):
             self.fit_words(self.words_)
             return self
 
-        elif raw_documents:
+        elif top_ngrams:
 
-            # Extract features using a count vectorizer
-            fe = FeatureExtractor(raw_documents)
-            doc_term_matrix, vocabulary, feature_names = fe.count_vectorizer()
+            self.words_ = top_ngrams
 
-            self.words_ = fe.get_top_words(vocabulary, doc_term_matrix, max_words=self.max_words)
-
-            print ("Fitting words")
-            t0 = time()
+            #print ("Fitting words")
+            #t0 = time()
             self.fit_words(self.words_)
-            print("done in %fs" % (time() - t0))
+            #print("done in %fs" % (time() - t0))
 
             return self
         else:
-            raise ValueError("text string or list of documents must be supplied.")
+            raise ValueError("text string or list of ngrams must be supplied.")
             
 
     def _check_generated(self):

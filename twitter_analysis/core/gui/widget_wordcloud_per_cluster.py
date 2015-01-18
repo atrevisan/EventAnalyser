@@ -31,18 +31,16 @@ class WidgetWordcloudPerCluster(QWidget, Ui_widget_wordcloud_per_cluster):
     file_name : string
         The file name for the wordcloud that is being generated.
 
-   regenerate_wordcloud_per_cluster : dict
-        Maps the wordcloud file name of the cluster to if it needs to be regenerated. If a dataset is selected
-        again for clusterization, clusterize the dataset and generate a new wordcloud for each cluster, 
-        otherwize use the already existent wordclouds. If it is empty it means all wordclouds need to be regenerated.
+     regenerate_files : list
+        Contains file names that need to be regenarated in case a new dataset is selected.
     """
-    def __init__(self, tweets_per_cluster, file_name, regenerate_wordcloud_per_cluster):
+    def __init__(self, tweets_per_cluster, file_name, regenerate_files):
 
         QWidget.__init__(self)
 
         self.tweets_per_cluster = tweets_per_cluster
         self.file_name = file_name
-        self.regenerate_wordcloud_per_cluster = regenerate_wordcloud_per_cluster
+        self.regenerate_files = regenerate_files
         
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
@@ -54,13 +52,7 @@ class WidgetWordcloudPerCluster(QWidget, Ui_widget_wordcloud_per_cluster):
 
         filename = os.getcwd() + "\\wordclouds\\" + self.file_name + "_cluster_" + str(cluster_label) + ".png"
         
-        if filename in self.regenerate_wordcloud_per_cluster:
-
-            image = QtGui.QImage(filename)
-            pp = QtGui.QPixmap.fromImage(image)
-
-            self.label_wordcloud.setPixmap(pp)
-        else:
+        if not filename in self.regenerate_files:
 
             wordcloud = WordCloud(max_words=20, prefer_horizontal=0.80).generate(raw_documents=self.tweets_per_cluster[cluster_label])
             wordcloud.to_file(filename)
@@ -69,4 +61,13 @@ class WidgetWordcloudPerCluster(QWidget, Ui_widget_wordcloud_per_cluster):
             pp = QtGui.QPixmap.fromImage(image)
 
             self.label_wordcloud.setPixmap(pp)
-            self.regenerate_wordcloud_per_cluster[filename] = False
+
+            self.regenerate_files.append(filename)
+
+        else:
+
+            image = QtGui.QImage(filename)
+            pp = QtGui.QPixmap.fromImage(image)
+
+            self.label_wordcloud.setPixmap(pp)
+        

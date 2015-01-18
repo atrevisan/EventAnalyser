@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1120</width>
+    <height>840</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1120</width>
      <height>26</height>
     </rect>
    </property>
@@ -29,6 +29,8 @@
     </property>
     <addaction name="action_fetch_tweets"/>
     <addaction name="action_analyse_tweets"/>
+    <addaction name="action_ml_config"/>
+    <addaction name="action_text_analysis_config"/>
    </widget>
    <addaction name="menu_text_analysis"/>
   </widget>
@@ -41,6 +43,16 @@
   <action name="action_analyse_tweets">
    <property name="text">
     <string>Analyse tweets</string>
+   </property>
+  </action>
+  <action name="action_ml_config">
+   <property name="text">
+    <string>ML config</string>
+   </property>
+  </action>
+  <action name="action_text_analysis_config">
+   <property name="text">
+    <string>Text analysis config</string>
    </property>
   </action>
  </widget>

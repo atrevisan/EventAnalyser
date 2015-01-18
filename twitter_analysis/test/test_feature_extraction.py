@@ -6,6 +6,7 @@
 import unittest
 import os
 import numpy as np
+import csv
 
 import sys
 if os.getcwd() not in sys.path:
@@ -21,14 +22,20 @@ DOCUMENTS = ['O rato roeu a roupa do rei de roma',
              'Eu gosto de batata',
              'Salve o rei da inglaterra: o rato!!',
              'Ratos trazem doencas',
-             'A peste negra foi proveniente da pulga do rato, rato pulguento!!']
+             'A peste negra foi proveniente da pulga do rato, rato pulguento!!',
+             'Batata e bom',
+             'Eu gosto de estudar e batata',
+             'Batata e um turbeculo',
+             'Sera que a batata e uma raiz ?',
+             'Tem gente que nao gosta de batata',
+             'Batata frita e muito bom']
 
 class TestFeatureExtraction(unittest.TestCase):
 
     def test_count_vectorizer(self):
 
         fe = FeatureExtractor(DOCUMENTS, max_features=3)
-        X, vocabulary = fe.count_vectorizer()
+        X, vocabulary, feature_names = fe.count_vectorizer()
         lines, columns = X.shape
         self.assertGreaterEqual(3, columns)
 
@@ -61,10 +68,18 @@ class TestFeatureExtraction(unittest.TestCase):
 
     def test_get_top_words(self):
 
-        fe = FeatureExtractor(DOCUMENTS)
-        X, vocabulary = fe.count_vectorizer()
-        top_words = fe.get_top_words(vocabulary, X, max_words=6)
-        self.assertGreaterEqual(6, len(top_words))
+        file_name = r"C:\Users\Allan\Documents\Visual Studio 2013\Projects\twitter_analysis\twitter_analysis\tweets\tweets_dilma.csv"
+        tweets = []
+        with open(file_name, newline='', encoding='utf-8') as f:
+            csv_reader = csv.reader(f, delimiter=';', quotechar='|')
+            for tweet in csv_reader:
+                tweets.append(tweet[2])
+
+        fe = FeatureExtractor(tweets, ngram_range=(2,2), max_features=20)
+        X, vocabulary, feature_names = fe.count_vectorizer()
+        top_words = fe.get_top_words(vocabulary, X, max_words=20)
+        print(top_words)
+        self.assertGreaterEqual(20, len(top_words))
 
 if __name__ == '__main__':
     unittest.main()

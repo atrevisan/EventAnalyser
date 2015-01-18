@@ -44,7 +44,8 @@ class DocumentClustering:
         # not normalized, we have to redo the normalization.
         if perform_lsa:
             dr = DimensionalityReduction(trainning_data)
-            self.trainning_data = dr.performLSA(n_components=n_components)
+            self.trainning_data = dr.perform_lsa(n_components=n_components)
+            self.explained_variance = dr.explained_variance
 
     def k_means(self, k, use_minibatch=False):
         """Perform k-means clustering alghorithm.
@@ -67,87 +68,67 @@ class DocumentClustering:
         else:
             self.km = KMeans(n_clusters=k, init='k-means++', max_iter=100, n_init=1)
 
-        print("Clustering sparse data with %s" % self.km)
+        #print("Clustering sparse data with %s" % self.km)
         t0 = time()
         self.km.fit(self.trainning_data)
-        print("done in %0.3fs" % (time() - t0))
-        print()
+        self.clusterization_time = "%0.3fs" % (time() - t0)
+        self.silhuette_coefficient = "%0.3f" % metrics.silhouette_score(self.trainning_data, self.km.labels_, metric='euclidean')
+        #print("done in %0.3fs" % (time() - t0))
+        #print()
   
-        print("Silhouette Coefficient: %0.3f" % 
-              metrics.silhouette_score(self.trainning_data, self.km.labels_, metric='euclidean'))
+        #print("Silhouette Coefficient: %0.3f" % 
+        #      metrics.silhouette_score(self.trainning_data, self.km.labels_, metric='euclidean'))
 
-        print()
+        #print()
 
         self.cluster_centers = self.km.cluster_centers_
 
-    def get_top_words_per_cluster(self, feature_names, max_words_per_cluster=10):
-        """Retrive the most important words from each cluster.
+    def get_top_ngrams_per_cluster(self, feature_names, max_ngrams_per_cluster=20):
+        """Retrive the most important ngrams from each cluster.
         
-        The words importance measurement will depend on the vectorization method used.
-        For example, if used a Count Vectorizer the word importance is determined by
+        The ngrams importance measurement will depend on the vectorization method used.
+        For example, if used a Count Vectorizer the ngram importance is determined by
         the respective counts for each feature in the cluster centroids.
 
         Parameters
         ----------
         feature_names : array of strings
             Array mapping from feature integer indexes in the trainning matrix
-            to feature names.
+            columns to the respective feature names.
         
-        max_words_per_cluster : int (default 10)
-            The desired number of most important words to be retrived from each cluster.
+        max_ngrams_per_cluster : int (default 10)
+            The desired number of most important ngrams to be retrived from each cluster.
 
         Returns
         --------
-        top_words_per_cluster : list of lists
-            List containing k lists, each one containing max_words_per_cluster words.
+        top_ngrams_per_cluster : list of lists of tuples (string, number)
+            List containing k lists, each one containing max_ngrams_per_cluster tuples
+            (ngram, weight), where weight is the centroid component value.
         """
 
         order_centroids = self.cluster_centers.argsort()[:, ::-1]
         
-        top_words_per_cluster = []
+        top_ngrams_per_cluster = []
         
-        print("Number of clusters: %d, Words per cluster: %d" %(self.k, max_words_per_cluster))
+        #print("Number of clusters: %d, Ngrams per cluster: %d" %(self.k, max_ngrams_per_cluster))
         for i in range(self.k):
-            print("Cluster %d:\n" % i)
-            top_words = [feature_names[ind] for ind in order_centroids[i, :max_words_per_cluster]]
-            for word in top_words:
-                print(' %s\n' % word, end='')
-            top_words_per_cluster.append(top_words)
+            #print("Cluster %d:\n" % i)
+            top_ngrams = [(feature_names[ind], self.cluster_centers[i][ind]) for ind in order_centroids[i, :max_ngrams_per_cluster]]
+            #for word in top_words:
+                #print(' %s\n' % word, end='')
+            top_ngrams_per_cluster.append(top_ngrams)
       
-        return top_words_per_cluster
+        return top_ngrams_per_cluster
 
-    def predict_cluster(self, raw_documents):
+    def predict_clusters(self):
         """Return the index of the cluster each trainning example belongs to.
 
-        Parameters
-        ----------
-        raw_documents : list of string
-            The documents used to train the clustering model.
-        
         Returns
         -------
-        labels : array [n_samples,]
+        cluster_labels : array [n_samples,]
             Index of the cluster each sample belongs to.
         """
-
-        heading = ["Documents"]
-                      
-        labels = self.km.predict(self.trainning_data)
-        count_labels = {}
-        for label in labels:
-            if label in count_labels:
-                count_labels[label] += 1
-            else:
-                count_labels[label] = 1
-
-        lines_x = []
-        lines = ["Cluster %d" % cluster for cluster in range(self.k)]
-        for i, line in enumerate(lines):
-            lines_x.extend([line] * count_labels[i])
+              
+        cluster_labels = self.km.predict(self.trainning_data)
         
-        raw_documents = [(cluster, document) for cluster, document in zip(labels, raw_documents)]
-        cluster_ordered_raw_documents = sorted(raw_documents, key=lambda x : x[0])
-        cluster_ordered_raw_documents = [x[1] for x in cluster_ordered_raw_documents]
-        #print (pandas.DataFrame(cluster_ordered_raw_documents, lines_x, heading))
-        
-        return labels
+        return cluster_labels

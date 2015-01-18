@@ -7,6 +7,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
+from time import time
+
 class DimensionalityReduction:
     """Performs dimensionality reduction over trainning data.
     
@@ -25,7 +27,7 @@ class DimensionalityReduction:
         self.trainning_data = trainning_data
     
 
-    def performLSA(self, n_components=2):
+    def perform_lsa(self, n_components=2):
         """Perform Latent semantic analysis.
         
         Parameters
@@ -40,20 +42,20 @@ class DimensionalityReduction:
             reduced training data.
         """
 
-        print("Performing dimensionality reduction using LSA")
+        #print("Performing dimensionality reduction using LSA")
         t0 = time()
 
         svd = TruncatedSVD(n_components)
         lsa = make_pipeline(svd, Normalizer(copy=False))
 
-        X = lsa.fit_transform(trainning_data)
+        X = lsa.fit_transform(self.trainning_data)
 
-        print("done in %fs" % (time() - t0))
+        #print("done in %fs" % (time() - t0))
+        #print("n_samples: %d, n_features: %d" % X.shape)
 
-        self.explained_variance = svd.explained_variance_ratio_.sum()
-        print("Explained variance of the SVD step: {}%".format(
-            int(explained_variance * 100)))
+        self.explained_variance = int (svd.explained_variance_ratio_.sum() * 100)
+        #print("Explained variance of the SVD step: {}%".format(self.explained_variance))
 
-        print()
+        #print()
 
         return X

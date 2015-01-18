@@ -76,6 +76,7 @@ def get_stopwords_list(stopwords_filename):
     stopwords.append('at_user')
     stopwords.append('url')
     stopwords.append('rt')
+    stopwords.append('gt')
 
     with open(stopwords_filename, 'r') as f:
         

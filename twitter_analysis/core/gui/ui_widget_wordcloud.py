@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_wordcloud.ui'
 #
-# Created: Sun Dec 28 10:11:30 2014
+# Created: Sat Jan 10 10:50:02 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,9 +26,9 @@ except AttributeError:
 class Ui_widget_wordcloud(object):
     def setupUi(self, widget_wordcloud):
         widget_wordcloud.setObjectName(_fromUtf8("widget_wordcloud"))
-        widget_wordcloud.resize(549, 389)
+        widget_wordcloud.resize(839, 709)
         self.label_wordcloud = QtGui.QLabel(widget_wordcloud)
-        self.label_wordcloud.setGeometry(QtCore.QRect(0, 50, 551, 341))
+        self.label_wordcloud.setGeometry(QtCore.QRect(20, 50, 801, 600))
         self.label_wordcloud.setStyleSheet(_fromUtf8(""))
         self.label_wordcloud.setText(_fromUtf8(""))
         self.label_wordcloud.setObjectName(_fromUtf8("label_wordcloud"))
