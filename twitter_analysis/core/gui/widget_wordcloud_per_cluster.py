@@ -24,50 +24,30 @@ class WidgetWordcloudPerCluster(QWidget, Ui_widget_wordcloud_per_cluster):
 
     Parameters
     ----------
-    tweets_per_cluster : dict of lists of strings
-        The list of words that will be used in the wordcloud is obtained
-        from this dataset. Mappings from cluster label to list of documents.
-
     file_name : string
-        The file name for the wordcloud that is being generated.
+        The base file name for the wordclouds that are being loaded
+        from each cluster.
 
-     regenerate_files : list
-        Contains file names that need to be regenarated in case a new dataset is selected.
+     k : int
+        The number of clusters.
     """
-    def __init__(self, tweets_per_cluster, file_name, regenerate_files):
+    def __init__(self, file_name, k):
 
         QWidget.__init__(self)
 
-        self.tweets_per_cluster = tweets_per_cluster
         self.file_name = file_name
-        self.regenerate_files = regenerate_files
         
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
 
-        self.combobox_cluster.addItems(["Cluster %d" % cluster_label for cluster_label in range(len(tweets_per_cluster))])
+        self.combobox_cluster.addItems(["Cluster %d" % cluster_label for cluster_label in range(k)])
         self.combobox_cluster.activated[int].connect(self.onActivated)   
 
     def onActivated(self, cluster_label):
 
-        filename = os.getcwd() + "\\wordclouds\\" + self.file_name + "_cluster_" + str(cluster_label) + ".png"
-        
-        if not filename in self.regenerate_files:
+        wordcloud_file_name = os.getcwd() + "\\wordclouds\\" + self.file_name + "_cluster_" + str(cluster_label) + ".png"
+ 
+        image = QtGui.QImage(wordcloud_file_name)
+        pp = QtGui.QPixmap.fromImage(image)
 
-            wordcloud = WordCloud(max_words=20, prefer_horizontal=0.80).generate(raw_documents=self.tweets_per_cluster[cluster_label])
-            wordcloud.to_file(filename)
-
-            image = QtGui.QImage(filename)
-            pp = QtGui.QPixmap.fromImage(image)
-
-            self.label_wordcloud.setPixmap(pp)
-
-            self.regenerate_files.append(filename)
-
-        else:
-
-            image = QtGui.QImage(filename)
-            pp = QtGui.QPixmap.fromImage(image)
-
-            self.label_wordcloud.setPixmap(pp)
-        
+        self.label_wordcloud.setPixmap(pp)

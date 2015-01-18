@@ -103,18 +103,9 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         """Add the wordcloud per cluster widget to the main layout in response of a click event."""
         
         self.clear_layout()
-        tweets = [t[2] for t in self.tweets]
-
-        # Calculate from wich cluster each tweet belongs to
-        tweets_per_cluster = {}
-        for tweet, label in zip(tweets, self.cluster_labels):
-            if label in tweets_per_cluster:
-                tweets_per_cluster[label].append(tweet)
-            else:
-                tweets_per_cluster[label] = [tweet]
-
-        widget_wordcloud_per_cluster = WidgetWordcloudPerCluster(tweets_per_cluster, self.file_name, 
-                                                                 self.regenerate_files)
+        
+        widget_wordcloud_per_cluster = WidgetWordcloudPerCluster(self.file_name, 
+                                                                 len(self.top_ngrams_per_cluster))
         self.vlayout_content.addWidget(widget_wordcloud_per_cluster)
 
     def open_tweets_file(self):
@@ -125,7 +116,7 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         Each csv file has also a binary file associated that contains hashtags
         stored in a dict format.
         """
-            
+         
         # user chosen file 
         file_name = QtGui.QFileDialog.getOpenFileName(self, "open data", os.getcwd() + "\\clusterized_tweets\\", "*.csv")
         
@@ -163,6 +154,8 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         self.button_retweets_per_cluster.setDisabled(False)
         self.button_hashtags.setDisabled(False)
         self.button_hashtags_per_cluster.setDisabled(False)
+
+        self.clear_layout()
 
     def clear_layout(self):
         """Remove all the widgets from the main layout."""
