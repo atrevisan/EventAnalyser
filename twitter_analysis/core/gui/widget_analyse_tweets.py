@@ -42,9 +42,6 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
     file_name : string
         Dataset name that is being handle. This is the base name for the raw tweets,
         hashtags and wordcloud files.
-
-    regenerate_files : list
-        Contains file names that need to be regenarated in case a new dataset is selected.
     """
     def __init__(self):
 
@@ -82,7 +79,7 @@ class WidgetAnalyseTweets(QWidget, Ui_widget_analyse_tweets):
         """Add the n-gram widget to the main layout in response of a click event."""
 
         self.clear_layout()
-        widget_ngrams = widgetNGrams(self.tweets, self.file_name, self.regenerate_files)
+        widget_ngrams = widgetNGrams(self.tweets, self.dataset_top_ngrams, self.file_name)
        
         self.vlayout_content.addWidget(widget_ngrams)
 

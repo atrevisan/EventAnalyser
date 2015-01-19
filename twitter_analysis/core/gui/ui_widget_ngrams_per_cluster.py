@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_ngrams_per_cluster.ui'
 #
-# Created: Sat Jan 10 10:50:10 2015
+# Created: Sun Jan 18 17:00:43 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -33,15 +33,21 @@ class Ui_widget_ngrams_per_cluster(object):
         self.label_graph.setText(_fromUtf8(""))
         self.label_graph.setObjectName(_fromUtf8("label_graph"))
         self.layoutWidget = QtGui.QWidget(widget_ngrams_per_cluster)
-        self.layoutWidget.setGeometry(QtCore.QRect(21, 21, 158, 22))
+        self.layoutWidget.setGeometry(QtCore.QRect(21, 21, 185, 27))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.hlayout_radio = QtGui.QHBoxLayout(self.layoutWidget)
         self.hlayout_radio.setMargin(0)
         self.hlayout_radio.setObjectName(_fromUtf8("hlayout_radio"))
         self.radio_hour = QtGui.QRadioButton(self.layoutWidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.radio_hour.setFont(font)
         self.radio_hour.setObjectName(_fromUtf8("radio_hour"))
         self.hlayout_radio.addWidget(self.radio_hour)
         self.radio_day_week = QtGui.QRadioButton(self.layoutWidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.radio_day_week.setFont(font)
         self.radio_day_week.setObjectName(_fromUtf8("radio_day_week"))
         self.hlayout_radio.addWidget(self.radio_day_week)
         self.layoutWidget1 = QtGui.QWidget(widget_ngrams_per_cluster)

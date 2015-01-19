@@ -34,13 +34,18 @@
     <rect>
      <x>21</x>
      <y>21</y>
-     <width>158</width>
-     <height>22</height>
+     <width>185</width>
+     <height>27</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="hlayout_radio">
     <item>
      <widget class="QRadioButton" name="radio_hour">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>hour</string>
       </property>
@@ -48,6 +53,11 @@
     </item>
     <item>
      <widget class="QRadioButton" name="radio_day_week">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>day of week</string>
       </property>
