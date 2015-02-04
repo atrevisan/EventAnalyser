@@ -11,6 +11,7 @@ from core.textutils.text_pre_processing import pre_process_tweet_text
 
 from twython import Twython
 from time import sleep
+from time import time
 
 import csv
 import pickle
@@ -121,6 +122,9 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         i = 0
         tweet_count = 0
 
+        # max of 180 querries per 15 minutes
+        QUERY_PER_SEC = 15*60/180.0  
+        last_update = 0
         try:
             while self._active:
 
@@ -129,6 +133,12 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
                 # STEP 2: Save the returned tweets
                 # STEP 3: Get the next max_id
                 #----------------------------------------------------------------#
+
+                tdiff = time() - last_update
+                if tdiff < QUERY_PER_SEC:
+                    sleep(QUERY_PER_SEC - tdiff) 
+                
+                last_update = time()
 
                 # STEP 1: Query Twitter
                 if(0 == i):
@@ -209,6 +219,11 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         """
              
         file_name = QtGui.QFileDialog.getSaveFileName(self, "Save data", os.getcwd() + "\\tweets\\", "*.csv")
+
+        # Case the user select an already existent file
+        if file_name.find(".csv") != -1:
+            file_name = file_name[:-4]
+
         csv_file = open(file_name + ".csv", 'w', newline='', encoding="utf-8")
         csv_writer = csv.writer(csv_file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
 

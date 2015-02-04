@@ -43,6 +43,10 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
 
     cluster_labels : array [n_samples,]
         Index of the cluster each sample belongs to.
+
+     vectorizer : sklearn.text vectorizer object
+        Reference to the vectorizer object that handles feature
+        extraction.
     """
     def __init__(self):
 
@@ -143,7 +147,7 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
         remove_stopwords = self.check_remove_stopwords_clustering.isChecked()
         use_minibatch = self.check_use_minibatch_clustering.isChecked()
         perform_lsa = self.check_perform_lsa_clustering.isChecked()
-        n_components = list(range(2, max_features))[self.combo_n_components_clustering.currentIndex()]
+        n_components = list(range(2, max_features + 1))[self.combo_n_components_clustering.currentIndex()]
 
 
         tweets = [tweet[2] for tweet in self.tweets]
@@ -162,20 +166,22 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
         try:
             if vectorizer == "tfidf vectorizer":
 
-                X, vocabulary, feature_names = fe.tfidf_vectorizer(use_idf=use_idf)
+                fe.tfidf_vectorizer(use_idf=use_idf)
 
             else:
-                X, vocabulary, feature_names = fe.count_vectorizer()
+                fe.count_vectorizer()
 
-            self.dataset_top_ngrams = fe.get_top_ngrams(vocabulary, X)
+            self.dataset_top_ngrams = fe.get_top_ngrams()
+            self.vectorizer = fe.vectorizer
             
-            dc = DocumentClustering(X, perform_lsa=perform_lsa, n_components=n_components)
+            dc = DocumentClustering(fe.X, perform_lsa=perform_lsa, n_components=n_components)
 
             if use_minibatch:
                 dc.k_means(k, use_minibatch=use_minibatch)
             else:
                 dc.k_means(k)
 
+            feature_names = fe.feature_names
             self.top_ngrams_per_cluster = dc.get_top_ngrams_per_cluster(feature_names)
             self.cluster_labels = dc.predict_clusters()
             
@@ -216,47 +222,6 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
             wordcloud = WordCloud(max_words=20, prefer_horizontal=0.80).generate(top_ngrams=cluster_ngrams)
             wordcloud.to_file(wordcloud_filename[:-4] + "_cluster_" + str(cluster_label) + ".png")
 
-    
-
-    
-
-    def generate_ngrams(self, file_name):
-        """Generate the ngrams and ngrams per cluster for the clusterized dataset.
-        
-        Parameters
-        -----------
-        file_name : string
-            The base name for the ngrams .png graphs that will be generated.
-        """
-
-        # first ngrams per hour
-        for ngram in self.dataset_top_ngrams:
-
-            ngram_filename = os.getcwd() + "\\graphs\\" + file_name + "_" + ngram[0].replace(' ', '_') + "_per_hour" + ".png"
-            self.generate_ngram_per_hour(ngram_filename, ngram[0])
-
-        # ngrams per cluster
-        for cluster_label, cluster_top_ngrams in enumerate(self.top_ngrams_per_cluster):
-
-            for ngram in cluster_top_ngrams:
-
-                ngram_filename = os.getcwd() + "\\graphs\\" + file_name + "_" + ngram[0].replace(' ', '_') +  "_per_hour_" + "cluster_" + str(cluster_label) + ".png"
-                self.generate_ngram_per_hour(ngram_filename, ngram[0])
-        
-        # second ngram per day of week
-        for ngram in self.dataset_top_ngrams:
-
-            ngram_filename = os.getcwd() + "\\graphs\\" + file_name + "_" + ngram[0].replace(' ', '_') + "_per_day_of_week" + ".png"
-            self.generate_ngram_per_day_of_week(ngram_filename, ngram[0])
-
-        # ngrams per cluster
-        for cluster_label, cluster_top_ngrams in enumerate(self.top_ngrams_per_cluster):
-
-            for ngram in cluster_top_ngrams:
-
-                ngram_filename = os.getcwd() + "\\graphs\\" + file_name + "_" + ngram[0].replace(' ', '_') +  "_per_day_of_week_" + "cluster_" + str(cluster_label) + ".png"
-                self.generate_ngram_per_day_of_week(ngram_filename, ngram[0])
-
     def save_object(self, obj, filename):
         """Save objet to file.
         
@@ -291,13 +256,18 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
         if file_name.find(".csv") != -1:
             file_name = file_name[:-4]
 
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+
         # save objects that will be used in the tweets text analysis
         self.save_object(self.dataset_top_ngrams, file_name + "_dataset_top_ngrams.pkl")
         self.save_object(self.top_ngrams_per_cluster, file_name + "_top_ngrams_per_cluster.pkl")
         #self.save_object(self.cluster_labels, file_name + "_cluster_labels.pkl")
         self.save_object(self.hashtags, file_name + "_hashtags.pkl")
 
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        # Save the vectorizer used to extract features for
+        # later recover of the analyser function used
+        # for data tokenization
+        self.save_object(self.vectorizer, file_name + "_vectorizer.pkl")
 
         csv_file = open(file_name + ".csv", 'w', newline='', encoding="utf-8")
         csv_writer = csv.writer(csv_file, delimiter=';', quoting=csv.QUOTE_MINIMAL)
@@ -314,7 +284,6 @@ class WidgetMLConfig(QWidget, Ui_widget_ml_config):
         
         QApplication.restoreOverrideCursor()
 
-        
     def on_activated_combo_vectorizer_clustering(self, vectorizer):
 
         if vectorizer == "count vectorizer" and not self.check_use_idf_clustering is None:

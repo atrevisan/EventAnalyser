@@ -15,6 +15,7 @@ from core.textutils.text_pre_processing import get_stopwords_list
 
 from time import time
 import os
+import pickle
 
 STOPWORDS = get_stopwords_list(os.getcwd() + r"\core\textutils\stopwords.txt")
 
@@ -60,8 +61,19 @@ class FeatureExtractor:
 
     Atributes
     ----------
-    analyser : function
-        A callable that handles preprocessing and tokenization.
+    X : array[n_samples, n_features]
+        Vectorized trainning data.
+
+    vectorizer : sklearn.text vectorizer object
+        Reference to the vectorizer object that handles feature
+        extraction.
+
+    feature_names : list of str
+        The  feature index in the list maps right to the 
+        respective column in X.
+
+    vocabulary : dict mapping str to int
+        Map the feature name to the respective column in X.
     """
 
     def __init__(self, raw_data, ngram_range=(1,1), max_df=0.5, min_df=2, max_features=None,
@@ -103,76 +115,24 @@ class FeatureExtractor:
             self.raw_data = stemmed_tweets
 
     def count_vectorizer(self):
-        """Extract features using a count vectorizer.
-        
-        Return
-        -------
-        (X, vocabulary, feature_names) : (array, dict, list)
-            Document term matrix, vocabulary mapping words to column indexes in X amd
-            list containing words where the index from each position coresponds to a column
-            in X.
-        """
+        """Extract features using a count vectorizer."""
 
-        #print("Extracting features from dataset using a sparse vectorizer")
+        #print("Extracting features from dataset using a count vectorizer")
         #print()
 
         #t0 = time()
-        count_vect = CountVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
+        self.vectorizer = CountVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
                                      max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
                                      binary=self.binary) 
 
-        
-        X = count_vect.fit_transform(self.raw_data)
-        
-
-        vocabulary = count_vect.vocabulary_
-        feature_names = count_vect.get_feature_names()
-
-        self.analyser = count_vect.build_analyzer()
+        self.X = self.vectorizer.fit_transform(self.raw_data)
+        self.vocabulary = self.vectorizer.vocabulary_
+        self.feature_names = self.vectorizer.get_feature_names()
+        self.vectorizer.build_analyzer()
 
         #print("done in %fs" % (time() - t0))
-        #print("n_samples: %d, n_features: %d" % X.shape)
+        #print("n_samples: %d, n_features: %d" % self.X.shape)
         #print()
-        
-        return (X, vocabulary, feature_names)
-
-    def hashing_vectorizer(self, use_idf=False):
-        """Extract features using a hashing vectorizer. This vectorizer is 
-        good for memory usage and speed up reasons but lacks the inverse transform,
-        the mappings from words to the respective indexes in X.
-        
-        Return
-        -------
-        X : float array
-            Document term matrix.
-        """
-
-        #print("Extracting features from dataset using a sparse vectorizer")
-        #print()
-
-        #t0 = time()
-        if use_idf:
-            # Perform an IDF normalization on the output of HashingVectorizer
-            hasher = HashingVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
-                                       n_features=self.max_features, non_negative=True, norm=None, 
-                                       binary=False)
-
-            vectorizer = make_pipeline(hasher, TfidfTransformer())
-        else:
-            vectorizer = HashingVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
-                                           n_features=self.max_features, non_negative=False, norm='l2', 
-                                           binary=False)
-
-        
-        X = vectorizer.fit_transform(self.raw_data)
-        
-        self.analyser = vectorizer.build_analyzer()
-        
-        #print("done in %fs" % (time() - t0))
-        #print("n_samples: %d, n_features: %d" % X.shape)
-        #print()
-
-        return X
 
     def tfidf_vectorizer(self, use_idf=True):
         """Extract features using a tf-idf vectorizer.
@@ -181,39 +141,25 @@ class FeatureExtractor:
         ----------
         use_idf : Boolean (default True)
             Perform inverse document frequency normalization
-        
-        Return
-        -------
-        (X, vocabulary, feature_names) : (array, dict, list)
-            Document term matrix, vocabulary mapping words to column indexes in X amd
-            list containing words where the index from each position coresponds to a column
-            in X.
         """
 
-        #print("Extracting features from dataset using a sparse vectorizer")
+        #print("Extracting features from dataset using a tf-idf vectorizer")
         #print()
 
         t0 = time()
-        tfidf_vectorizer = TfidfVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
+        self.vectorizer = TfidfVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
                                            max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
                                            use_idf=use_idf, binary=self.binary) 
 
-        
-        X = tfidf_vectorizer.fit_transform(self.raw_data)
-        
-
-        vocabulary = tfidf_vectorizer.vocabulary_
-        feature_names = tfidf_vectorizer.get_feature_names()
-        
-        self.analyser = tfidf_vectorizer.build_analyzer()
-
+        self.X = self.vectorizer.fit_transform(self.raw_data)
+        self.vocabulary = self.vectorizer.vocabulary_
+        self.feature_names = self.vectorizer.get_feature_names()
+    
         #print("done in %fs" % (time() - t0))
         #print("n_samples: %d, n_features: %d" % X.shape)
         #print()
 
-        return (X, vocabulary, feature_names)
-
-    def get_top_ngrams(self, vocabulary, X, max_ngrams=20):
+    def get_top_ngrams(self, max_ngrams=20):
         """Get the top ngrams extracted from some dataset.
 
         Calculate the ngrams weight based on the sum of
@@ -221,13 +167,7 @@ class FeatureExtractor:
         column in the document term matrix.
         
         Parameters
-        ----------
-        vocabulary : dict
-            Dictionary mapping from words to column indexes in X.
-
-        X : array, [n_samples, n_features]
-            Bag of words model extracted from the document corpus.
-            
+        ----------        
         max_ngrams : int
             Max number of top ngrams to be retrived. 
             
@@ -237,7 +177,7 @@ class FeatureExtractor:
             The global importance of each ngram in a text corpus in descending order. 
         """
 
-        freqs = [(ngram, X.getcol(idx).sum()) for ngram, idx in vocabulary.items()]
+        freqs = [(ngram, self.X.getcol(idx).sum()) for ngram, idx in self.vocabulary.items()]
         
         #sort from largest to smallest
         top_ngrams = sorted (freqs, key = lambda x: -x[1])

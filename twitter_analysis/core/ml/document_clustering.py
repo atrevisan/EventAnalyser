@@ -4,13 +4,11 @@
 # License: MIT
 
 from time import time
-import pandas
 import numpy as np
 import operator
 
 from sklearn import metrics
 from sklearn.cluster import KMeans, MiniBatchKMeans
-
 
 from core.ml.dimensionality_reduction import DimensionalityReduction
 
@@ -72,7 +70,10 @@ class DocumentClustering:
         t0 = time()
         self.km.fit(self.trainning_data)
         self.clusterization_time = "%0.3fs" % (time() - t0)
-        self.silhuette_coefficient = "%0.3f" % metrics.silhouette_score(self.trainning_data, self.km.labels_, metric='euclidean')
+        
+        # using only 60% of each example features to calculate the silhuette coefficient
+        # for speed up and memory usage reasons.
+        self.silhuette_coefficient = "%0.3f" % metrics.silhouette_score(self.trainning_data, self.km.labels_, metric='euclidean', sample_size=int(self.trainning_data.shape[1] * 60/100))
         #print("done in %0.3fs" % (time() - t0))
         #print()
   
@@ -92,11 +93,11 @@ class DocumentClustering:
 
         Parameters
         ----------
-        feature_names : array of strings
+        feature_names : list of strings
             Array mapping from feature integer indexes in the trainning matrix
             columns to the respective feature names.
         
-        max_ngrams_per_cluster : int (default 10)
+        max_ngrams_per_cluster : int (default 20)
             The desired number of most important ngrams to be retrived from each cluster.
 
         Returns
