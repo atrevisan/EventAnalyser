@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
-    <height>709</height>
+    <width>779</width>
+    <height>549</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,18 @@
   <widget class="QLabel" name="label_graph">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>80</y>
-     <width>800</width>
-     <height>600</height>
+     <x>170</x>
+     <y>70</y>
+     <width>591</width>
+     <height>451</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">QLabel#label_graph { 
+	background-color: rgb(234, 234, 234);
+     border: 2px solid gray; 
+  
+ } </string>
    </property>
    <property name="text">
     <string/>
@@ -32,65 +36,177 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>21</x>
-     <y>21</y>
-     <width>185</width>
-     <height>27</height>
+     <x>390</x>
+     <y>10</y>
+     <width>221</width>
+     <height>31</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="hlayout_radio">
+   <layout class="QHBoxLayout" name="hlayout_ngrams" stretch="1,6">
     <item>
-     <widget class="QRadioButton" name="radio_hour">
+     <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
         <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>hour</string>
+       <string>N-grams:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QRadioButton" name="radio_day_week">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>day of week</string>
-      </property>
-     </widget>
+     <widget class="QComboBox" name="combo_ngrams"/>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>10</y>
-     <width>221</width>
-     <height>57</height>
+     <x>10</x>
+     <y>100</y>
+     <width>137</width>
+     <height>106</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="styleSheet">
+    <string notr="true">QWidget#widget { 
+	background-color: rgb(234, 234, 234);
+     border: 2px solid gray; 
+  
+ } </string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
-     <layout class="QHBoxLayout" name="hlayout_ngrams" stretch="1,6">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
+       <widget class="QRadioButton" name="radio_frequency">
         <property name="text">
-         <string>N-grams:</string>
+         <string>Frequency</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="combo_ngrams"/>
+       <widget class="QRadioButton" name="radio_retweets">
+        <property name="text">
+         <string>Retweets</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radio_positive_sentiment">
+        <property name="text">
+         <string>Positive Sentiment</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radio_negative_sentiment">
+        <property name="text">
+         <string>Negative Sentiment</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="widget_2" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>250</y>
+     <width>137</width>
+     <height>185</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QWidget#widget_2 { 
+	background-color: rgb(234, 234, 234);
+     border: 2px solid gray; 
+  
+ } </string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Year:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="combo_year"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_info_per_month">
+        <property name="text">
+         <string>Info per month</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Month:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="combo_month"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_info_per_day">
+        <property name="text">
+         <string>Info per day</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Day:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="combo_day"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_info_per_hour">
+        <property name="text">
+         <string>Info per hour</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

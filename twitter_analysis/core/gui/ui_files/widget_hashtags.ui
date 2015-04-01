@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>widget_ngrams_per_cluster</class>
- <widget class="QWidget" name="widget_ngrams_per_cluster">
+ <class>widget_hashtags</class>
+ <widget class="QWidget" name="widget_hashtags">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -42,7 +42,7 @@
      <height>31</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="hlayout_ngrams" stretch="1,6">
+   <layout class="QHBoxLayout" name="hlayout_hashtags" stretch="1,6">
     <item>
      <widget class="QLabel" name="label_2">
       <property name="font">
@@ -51,12 +51,12 @@
        </font>
       </property>
       <property name="text">
-       <string>N-grams:</string>
+       <string>Hashtags:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="combo_ngrams"/>
+     <widget class="QComboBox" name="combo_hashtags"/>
     </item>
    </layout>
   </widget>
@@ -209,33 +209,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget_2">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>10</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="hlayout_cluster" stretch="1,6">
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Clusters:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QComboBox" name="combo_cluster"/>
     </item>
    </layout>
   </widget>

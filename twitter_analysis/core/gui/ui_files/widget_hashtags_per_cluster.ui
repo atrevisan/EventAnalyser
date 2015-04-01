@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>widget_ngrams_per_cluster</class>
- <widget class="QWidget" name="widget_ngrams_per_cluster">
+ <class>widget_hashtags_per_cluster</class>
+ <widget class="QWidget" name="widget_hashtags_per_cluster">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -38,11 +38,11 @@
     <rect>
      <x>390</x>
      <y>10</y>
-     <width>221</width>
+     <width>241</width>
      <height>31</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="hlayout_ngrams" stretch="1,6">
+   <layout class="QHBoxLayout" name="hlayout_hashtags" stretch="1,6">
     <item>
      <widget class="QLabel" name="label_2">
       <property name="font">
@@ -51,12 +51,12 @@
        </font>
       </property>
       <property name="text">
-       <string>N-grams:</string>
+       <string>Hashtags:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="combo_ngrams"/>
+     <widget class="QComboBox" name="combo_hashtags"/>
     </item>
    </layout>
   </widget>
