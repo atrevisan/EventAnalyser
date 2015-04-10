@@ -45,58 +45,11 @@
 
 QWidget#widget_querry_container { 
 	
-	
-	
 	background-color: rgb(255, 255, 255);
      border: 1px solid gray; 
      border-radius: 7px; 
  } </string>
    </property>
-   <widget class="QPushButton" name="button_fetch_tweets">
-    <property name="geometry">
-     <rect>
-      <x>438</x>
-      <y>10</y>
-      <width>91</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="toolTip">
-     <string>search</string>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton#button_fetch_tweets {
-
-	background-color: rgb(255, 255, 127);
-	border-radius: 7px; 
-	border: 2px solid gray; 
-}
-
-QPushButton#button_fetch_tweets:hover {
-	background-color: rgb(227, 255, 82);
-	border-style: inset;
-
-}
- 
-QPushButton#button_fetch_tweets:pressed {
-	background-color: rgb(255, 255, 127);
-	border-style: inset;
-}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>../assets/mg.png</normaloff>../assets/mg.png</iconset>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="line_edit_querry">
     <property name="geometry">
      <rect>
@@ -113,6 +66,22 @@ QPushButton#button_fetch_tweets:pressed {
     </property>
     <property name="frame">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_fetch_tweets">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>10</y>
+      <width>91</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
@@ -162,6 +131,19 @@ QPushButton#button_fetch_tweets:pressed {
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="button_append_to_file">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>150</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Append to file</string>
+   </property>
+  </widget>
   <widget class="QPushButton" name="button_save_tweets">
    <property name="geometry">
     <rect>
@@ -171,52 +153,19 @@ QPushButton#button_fetch_tweets:pressed {
      <height>38</height>
     </rect>
    </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;save tweets&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#button_save_tweets {
-
-	background-color: transparent;
-	background-image: url(:/save/save.png);
-	background-repeat: no-repeat;
-}
-
-
-QPushButton#button_save_tweets:hover {
-	background-color: transparent;
-	background-image: url(:/save_2/save_2.png);
-
-	background-repeat: no-repeat;
-}
- 
-QPushButton#button_save_tweets:pressed {
-	background-color: transparent;
-	background-image: url(:/save/save.png);
-
-	background-repeat: no-repeat;
-}
-
-</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>34</width>
-     <height>33</height>
-    </size>
    </property>
   </widget>
   <zorder>label</zorder>
   <zorder>line_edit_tweet_count</zorder>
   <zorder>widget_querry_container</zorder>
+  <zorder>button_append_to_file</zorder>
   <zorder>button_save_tweets</zorder>
  </widget>
- <resources>
-  <include location="../assets/save.qrc"/>
-  <include location="../assets/save_2.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
