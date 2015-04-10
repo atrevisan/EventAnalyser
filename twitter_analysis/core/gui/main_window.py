@@ -21,8 +21,7 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         # custom event handling
         self.action_fetch_tweets.triggered.connect(self.add_widget_fetch_tweets)
-        self.action_analyse_tweets.triggered.connect(self.add_widget_analyse_tweets)
-        self.action_ml_config.triggered.connect(self.add_widget_ml_config)
+        
 
     def add_widget_ml_config(self):
         """Replace the current widget for a new ml config widget.
@@ -36,12 +35,13 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.setCentralWidget(widget_ml_config)
         
     def add_widget_fetch_tweets(self):
-        """Replaces the current widget for a new fetch tweets widget.
+        """Replaces the current widget for a new widget_fetch_tweets.
         
-        The fetch tweets widget contain gui elements for making Twitter searches.
+        This widget has gui elements for making Twitter querries and
+        save querry results to a csv file.
         """
 
-        widget_fetch_tweets = WidgetFetchTweets(self)
+        widget_fetch_tweets = WidgetFetchTweets()
         self.setCentralWidget(widget_fetch_tweets)
 
     def add_widget_analyse_tweets(self):
