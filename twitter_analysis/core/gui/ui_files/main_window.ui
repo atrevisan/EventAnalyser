@@ -27,37 +27,37 @@
     <property name="title">
      <string>Text analysis</string>
     </property>
-    <widget class="QMenu" name="menuAnalyse_tweets">
+    <widget class="QMenu" name="menu_analyse_tweets">
      <property name="title">
       <string>Analyse tweets</string>
      </property>
-     <addaction name="actionWordcloud"/>
-     <addaction name="actionWordcloud_per_cluster"/>
-     <addaction name="actionSentiment"/>
-     <addaction name="actionSentiment_per_cluster"/>
-     <addaction name="actionRelevant_tweets"/>
-     <addaction name="actionRelevant_tweets_per_cluster"/>
-     <addaction name="actionN_grams"/>
-     <addaction name="actionN_grams_per_cluster"/>
-     <addaction name="actionSentiment_by_location"/>
-     <addaction name="actionHashtags"/>
-     <addaction name="actionHashtags_per_cluster"/>
+     <addaction name="action_wordcloud"/>
+     <addaction name="action_wordcloud_per_cluster"/>
+     <addaction name="action_sentiment"/>
+     <addaction name="action_sentiment_per_cluster"/>
+     <addaction name="action_relevant_tweets"/>
+     <addaction name="action_relevant_tweets_per_cluster"/>
+     <addaction name="action_ngrams"/>
+     <addaction name="action_ngrams_per_cluster"/>
+     <addaction name="action_sentiment_by_location"/>
+     <addaction name="action_hashtags"/>
+     <addaction name="action_hashtags_per_cluster"/>
     </widget>
     <addaction name="action_fetch_tweets"/>
-    <addaction name="actionLoad_dataset"/>
-    <addaction name="menuAnalyse_tweets"/>
-    <addaction name="action_ml_config"/>
-    <addaction name="actionSentiment_classifier_config"/>
+    <addaction name="action_load_dataset"/>
+    <addaction name="actionLoad_sentiment_classification_model"/>
+    <addaction name="menu_analyse_tweets"/>
+    <addaction name="action_clustering_config"/>
+    <addaction name="action_sentiment_classifier_config"/>
    </widget>
    <addaction name="menu_text_analysis"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="action_fetch_tweets">
    <property name="text">
     <string>Fetch tweets</string>
    </property>
   </action>
-  <action name="action_ml_config">
+  <action name="action_clustering_config">
    <property name="text">
     <string>Clustering config</string>
    </property>
@@ -67,69 +67,74 @@
     <string>Text analysis config</string>
    </property>
   </action>
-  <action name="actionWordcloud">
+  <action name="action_wordcloud">
    <property name="text">
     <string>wordcloud</string>
    </property>
   </action>
-  <action name="actionWordcloud_per_cluster">
+  <action name="action_wordcloud_per_cluster">
    <property name="text">
     <string>wordcloud per cluster</string>
    </property>
   </action>
-  <action name="actionSentiment">
+  <action name="action_sentiment">
    <property name="text">
     <string>sentiment</string>
    </property>
   </action>
-  <action name="actionSentiment_per_cluster">
+  <action name="action_sentiment_per_cluster">
    <property name="text">
     <string>sentiment per cluster</string>
    </property>
   </action>
-  <action name="actionRelevant_tweets">
+  <action name="action_relevant_tweets">
    <property name="text">
     <string>relevant tweets</string>
    </property>
   </action>
-  <action name="actionRelevant_tweets_per_cluster">
+  <action name="action_relevant_tweets_per_cluster">
    <property name="text">
     <string>relevant tweets per cluster</string>
    </property>
   </action>
-  <action name="actionN_grams">
+  <action name="action_ngrams">
    <property name="text">
     <string>n-grams</string>
    </property>
   </action>
-  <action name="actionN_grams_per_cluster">
+  <action name="action_ngrams_per_cluster">
    <property name="text">
     <string>n-grams per cluster</string>
    </property>
   </action>
-  <action name="actionSentiment_by_location">
+  <action name="action_sentiment_by_location">
    <property name="text">
     <string>sentiment by location</string>
    </property>
   </action>
-  <action name="actionHashtags">
+  <action name="action_hashtags">
    <property name="text">
     <string>hashtags</string>
    </property>
   </action>
-  <action name="actionHashtags_per_cluster">
+  <action name="action_hashtags_per_cluster">
    <property name="text">
     <string>hashtags per cluster</string>
    </property>
   </action>
-  <action name="actionSentiment_classifier_config">
+  <action name="action_sentiment_classifier_config">
    <property name="text">
     <string>Sentiment classifier config</string>
    </property>
   </action>
-  <action name="actionLoad_dataset">
+  <action name="action_load_dataset">
    <property name="text">
-    <string>Load dataset</string>
+    <string>Load clusterized dataset</string>
+   </property>
+  </action>
+  <action name="actionLoad_sentiment_classification_model">
+   <property name="text">
+    <string>Load sentiment classification model</string>
    </property>
   </action>
  </widget>
