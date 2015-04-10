@@ -643,44 +643,11 @@
      <height>38</height>
     </rect>
    </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;save clusterized data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#button_save_clustering_config {
-
-	background-color: transparent;	
-	background-image: url(:/save/save.png);
-	background-repeat: no-repeat;
-}
-
-
-QPushButton#button_save_clustering_config:hover {
-	background-color: transparent;
-	
-	background-image: url(:/save_2/save_2.png);
-	
-	background-repeat: no-repeat;
-}
- 
-QPushButton#button_save_clustering_config:pressed {
-	background-color: transparent;
-	
-	background-image: url(:/save/save.png);
-	
-	background-repeat: no-repeat;
-}
-
-</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>34</width>
-     <height>33</height>
-    </size>
    </property>
   </widget>
  </widget>
