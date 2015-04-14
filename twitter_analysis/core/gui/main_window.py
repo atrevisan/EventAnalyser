@@ -4,10 +4,14 @@
 # License: MIT
 
 from PyQt4.QtGui import QMainWindow
+import os.path
+import pickle
+
 from core.gui.ui_main_window import Ui_main_window
 from core.gui.widget_fetch_tweets import WidgetFetchTweets
 from core.gui.widget_analyse_tweets import WidgetAnalyseTweets
 from core.gui.widget_clustering_config import WidgetClusteringConfig
+from core.gui.widget_load_data import WidgetLoadData
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -19,9 +23,20 @@ class MainWindow(QMainWindow, Ui_main_window):
         # Set up the user interface from Designer.
         self.setupUi(self)
 
+        self.menu_analyse_tweets.setDisabled(True)
+
+        clusterized_dataset_path_file = os.getcwd() + r"\core\gui\clusterized_dataset_path.pkl" 
+        if os.path.isfile(clusterized_dataset_path_file):
+            with open(clusterized_dataset_path_file, 'rb') as handle:
+                clusterized_dataset_path = pickle.loads(handle.read())
+
+                if not clusterized_dataset_path == "":
+                    self.menu_analyse_tweets.setDisabled(False)
+
         # custom event handling
         self.action_fetch_tweets.triggered.connect(self.add_widget_fetch_tweets)
         self.action_clustering_config.triggered.connect(self.add_widget_clustering_config)
+        self.action_load_dataset.triggered.connect(self.add_widget_load_dataset)
         
 
     def add_widget_clustering_config(self):
@@ -53,3 +68,18 @@ class MainWindow(QMainWindow, Ui_main_window):
        
         widget_analyse_tweets = WidgetAnalyseTweets()
         self.setCentralWidget(widget_analyse_tweets)
+
+    def add_widget_load_dataset(self):
+        """Replaces the current widget for a new widget_load_data.
+        
+        This widget has gui elements for loading the clusterized
+        dataset path.
+
+        Note
+        ----
+        The tweets text analysis menu items are enabled only if
+        there is some clusterized dataset path loaded.
+        """
+       
+        widget_load_data = WidgetLoadData(self.menu_analyse_tweets)
+        self.setCentralWidget(widget_load_data)
