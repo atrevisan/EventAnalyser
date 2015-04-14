@@ -7,7 +7,7 @@ from PyQt4.QtGui import QMainWindow
 from core.gui.ui_main_window import Ui_main_window
 from core.gui.widget_fetch_tweets import WidgetFetchTweets
 from core.gui.widget_analyse_tweets import WidgetAnalyseTweets
-from core.gui.widget_ml_config import WidgetMLConfig
+from core.gui.widget_clustering_config import WidgetClusteringConfig
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -21,18 +21,18 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         # custom event handling
         self.action_fetch_tweets.triggered.connect(self.add_widget_fetch_tweets)
+        self.action_clustering_config.triggered.connect(self.add_widget_clustering_config)
         
 
-    def add_widget_ml_config(self):
-        """Replace the current widget for a new ml config widget.
+    def add_widget_clustering_config(self):
+        """Replace the current widget for a new widget widget_clustering_config.
         
-        The machine learning config widget display gui elements for
-        dealing with the configuration of the clustering and 
-        sentiment classification procedures.
+        This widget displays gui elements for dealing with the configuration 
+        of the tweets clustering procedure.
         """
 
-        widget_ml_config = WidgetMLConfig()
-        self.setCentralWidget(widget_ml_config)
+        widget_clustering_config = WidgetClusteringConfig()
+        self.setCentralWidget(widget_clustering_config)
         
     def add_widget_fetch_tweets(self):
         """Replaces the current widget for a new widget_fetch_tweets.

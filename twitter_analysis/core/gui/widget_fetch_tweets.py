@@ -232,8 +232,7 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
                 except:
                     
                     print ("Nothing to fetch")
-                    sleep(60)
-                    continue
+                    break
                     
                 i += 1
 

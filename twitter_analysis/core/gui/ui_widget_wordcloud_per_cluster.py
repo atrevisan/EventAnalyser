@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_wordcloud_per_cluster.ui'
 #
-# Created: Sat Jan 10 10:49:54 2015
+# Created: Wed Apr  1 08:55:24 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,14 +26,18 @@ except AttributeError:
 class Ui_widget_wordcloud_per_cluster(object):
     def setupUi(self, widget_wordcloud_per_cluster):
         widget_wordcloud_per_cluster.setObjectName(_fromUtf8("widget_wordcloud_per_cluster"))
-        widget_wordcloud_per_cluster.resize(839, 709)
+        widget_wordcloud_per_cluster.resize(779, 549)
         self.label_wordcloud = QtGui.QLabel(widget_wordcloud_per_cluster)
-        self.label_wordcloud.setGeometry(QtCore.QRect(10, 50, 801, 601))
-        self.label_wordcloud.setStyleSheet(_fromUtf8(""))
+        self.label_wordcloud.setGeometry(QtCore.QRect(10, 50, 761, 491))
+        self.label_wordcloud.setStyleSheet(_fromUtf8("QLabel#label_wordcloud { \n"
+"    background-color: rgb(234, 234, 234);\n"
+"     border: 2px solid gray; \n"
+"  \n"
+" } "))
         self.label_wordcloud.setText(_fromUtf8(""))
         self.label_wordcloud.setObjectName(_fromUtf8("label_wordcloud"))
         self.layoutWidget = QtGui.QWidget(widget_wordcloud_per_cluster)
-        self.layoutWidget.setGeometry(QtCore.QRect(11, 11, 181, 24))
+        self.layoutWidget.setGeometry(QtCore.QRect(11, 11, 221, 24))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.hlayout_clusters = QtGui.QHBoxLayout(self.layoutWidget)
         self.hlayout_clusters.setMargin(0)
@@ -47,11 +51,12 @@ class Ui_widget_wordcloud_per_cluster(object):
         self.combobox_cluster = QtGui.QComboBox(self.layoutWidget)
         self.combobox_cluster.setObjectName(_fromUtf8("combobox_cluster"))
         self.hlayout_clusters.addWidget(self.combobox_cluster)
+        self.hlayout_clusters.setStretch(1, 1)
 
         self.retranslateUi(widget_wordcloud_per_cluster)
         QtCore.QMetaObject.connectSlotsByName(widget_wordcloud_per_cluster)
 
     def retranslateUi(self, widget_wordcloud_per_cluster):
         widget_wordcloud_per_cluster.setWindowTitle(_translate("widget_wordcloud_per_cluster", "Form", None))
-        self.label.setText(_translate("widget_wordcloud_per_cluster", "Clusters:", None))
+        self.label.setText(_translate("widget_wordcloud_per_cluster", "Cluster:", None))
 
