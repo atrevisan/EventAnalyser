@@ -7,6 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.metrics.pairwise import cosine_similarity 
 from sklearn.pipeline import make_pipeline
 
 from nltk import stem
@@ -188,3 +189,25 @@ class FeatureExtractor:
             return top_ngrams[:max_ngrams]
         else:
             return top_ngrams
+
+    def get_top_documents_by_cosine_similarity(self, max_documents=10):
+        """Get the top most similar documents to the first document (our search querry).
+        
+        Parameters
+        ----------
+        max_documents : int
+            The total number of documents to be retrived (the first one is
+            the querry, so it is ignored later).
+        """
+
+        cosine_similarities = cosine_similarity(self.X[0:1], self.X)
+        related_docs_indices = cosine_similarities.argsort().tolist()[0]
+        related_docs_indices = related_docs_indices[:-max_documents:-1]
+  
+
+        top_documents = []
+        for i in range(len(related_docs_indices)):
+            top_documents.append(self.raw_data[related_docs_indices[i]])
+ 
+        return top_documents
+

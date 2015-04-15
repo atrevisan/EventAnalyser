@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Apr 14 14:32:50 2015
+# Created: Wed Apr 15 14:55:25 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,11 +28,7 @@ class Ui_main_window(object):
         main_window.setObjectName(_fromUtf8("main_window"))
         main_window.resize(800, 600)
         self.widget_central_widget = QtGui.QWidget(main_window)
-        self.widget_central_widget.setStyleSheet(_fromUtf8("QWidget#widget_central_widget { \n"
-"\n"
-"     border: 2px solid gray; \n"
-"  \n"
-" } "))
+        self.widget_central_widget.setStyleSheet(_fromUtf8(""))
         self.widget_central_widget.setObjectName(_fromUtf8("widget_central_widget"))
         main_window.setCentralWidget(self.widget_central_widget)
         self.menubar = QtGui.QMenuBar(main_window)
@@ -77,6 +73,8 @@ class Ui_main_window(object):
         self.action_load_dataset.setObjectName(_fromUtf8("action_load_dataset"))
         self.actionLoad_sentiment_classification_model = QtGui.QAction(main_window)
         self.actionLoad_sentiment_classification_model.setObjectName(_fromUtf8("actionLoad_sentiment_classification_model"))
+        self.action_cosine_similarity = QtGui.QAction(main_window)
+        self.action_cosine_similarity.setObjectName(_fromUtf8("action_cosine_similarity"))
         self.menu_analyse_tweets.addAction(self.action_wordcloud)
         self.menu_analyse_tweets.addAction(self.action_wordcloud_per_cluster)
         self.menu_analyse_tweets.addAction(self.action_sentiment)
@@ -88,6 +86,7 @@ class Ui_main_window(object):
         self.menu_analyse_tweets.addAction(self.action_sentiment_by_location)
         self.menu_analyse_tweets.addAction(self.action_hashtags)
         self.menu_analyse_tweets.addAction(self.action_hashtags_per_cluster)
+        self.menu_analyse_tweets.addAction(self.action_cosine_similarity)
         self.menu_text_analysis.addAction(self.action_fetch_tweets)
         self.menu_text_analysis.addAction(self.action_load_dataset)
         self.menu_text_analysis.addAction(self.actionLoad_sentiment_classification_model)
@@ -120,4 +119,5 @@ class Ui_main_window(object):
         self.action_sentiment_classifier_config.setText(_translate("main_window", "Sentiment classifier config", None))
         self.action_load_dataset.setText(_translate("main_window", "Load clusterized dataset", None))
         self.actionLoad_sentiment_classification_model.setText(_translate("main_window", "Load sentiment classification model", None))
+        self.action_cosine_similarity.setText(_translate("main_window", "cosine similarity search", None))
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_wordcloud.ui'
 #
-# Created: Wed Apr  1 08:54:52 2015
+# Created: Wed Apr 15 10:39:03 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,7 +31,6 @@ class Ui_widget_wordcloud(object):
         self.label_wordcloud.setGeometry(QtCore.QRect(10, 50, 761, 491))
         self.label_wordcloud.setStyleSheet(_fromUtf8("QLabel#label_wordcloud { \n"
 "    background-color: rgb(234, 234, 234);\n"
-"     border: 2px solid gray; \n"
 "  \n"
 " } "))
         self.label_wordcloud.setText(_fromUtf8(""))

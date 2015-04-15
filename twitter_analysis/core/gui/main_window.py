@@ -14,6 +14,7 @@ from core.gui.widget_clustering_config import WidgetClusteringConfig
 from core.gui.widget_load_data import WidgetLoadData
 from core.gui.widget_wordcloud import WidgetWordcloud
 from core.gui.widget_wordcloud_per_cluster import WidgetWordcloudPerCluster
+from core.gui.widget_cosine_similarity import WidgetCosineSimilarity
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -41,6 +42,7 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_load_dataset.triggered.connect(self.add_widget_load_dataset)
         self.action_wordcloud.triggered.connect(self.add_widget_wordcloud)
         self.action_wordcloud_per_cluster.triggered.connect(self.add_widget_wordcloud_per_cluster)
+        self.action_cosine_similarity.triggered.connect(self.add_widget_cosine_similarity)
         
 
     def add_widget_clustering_config(self):
@@ -107,3 +109,13 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         widget_wordcloud_per_cluster = WidgetWordcloudPerCluster()
         self.setCentralWidget(widget_wordcloud_per_cluster)
+
+    def add_widget_cosine_similarity(self):
+        """Replaces the current widget for a new widget_cosine_similarity.
+        
+        This widget makes possible for the user to search in the dataset
+        for the tweets that resamble the most the suplied query.
+        """
+
+        widget_cosine_similarity = WidgetCosineSimilarity()
+        self.setCentralWidget(widget_cosine_similarity)

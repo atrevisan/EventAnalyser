@@ -15,11 +15,7 @@
   </property>
   <widget class="QWidget" name="widget_central_widget">
    <property name="styleSheet">
-    <string notr="true">QWidget#widget_central_widget { 
-
-     border: 2px solid gray; 
-  
- } </string>
+    <string notr="true"/>
    </property>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -50,6 +46,7 @@
      <addaction name="action_sentiment_by_location"/>
      <addaction name="action_hashtags"/>
      <addaction name="action_hashtags_per_cluster"/>
+     <addaction name="action_cosine_similarity"/>
     </widget>
     <addaction name="action_fetch_tweets"/>
     <addaction name="action_load_dataset"/>
@@ -143,6 +140,11 @@
   <action name="actionLoad_sentiment_classification_model">
    <property name="text">
     <string>Load sentiment classification model</string>
+   </property>
+  </action>
+  <action name="action_cosine_similarity">
+   <property name="text">
+    <string>cosine similarity search</string>
    </property>
   </action>
  </widget>
