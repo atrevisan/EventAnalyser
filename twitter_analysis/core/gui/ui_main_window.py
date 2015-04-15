@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Fri Apr 10 11:54:01 2015
+# Created: Tue Apr 14 14:32:50 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,6 +28,11 @@ class Ui_main_window(object):
         main_window.setObjectName(_fromUtf8("main_window"))
         main_window.resize(800, 600)
         self.widget_central_widget = QtGui.QWidget(main_window)
+        self.widget_central_widget.setStyleSheet(_fromUtf8("QWidget#widget_central_widget { \n"
+"\n"
+"     border: 2px solid gray; \n"
+"  \n"
+" } "))
         self.widget_central_widget.setObjectName(_fromUtf8("widget_central_widget"))
         main_window.setCentralWidget(self.widget_central_widget)
         self.menubar = QtGui.QMenuBar(main_window)

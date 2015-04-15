@@ -13,7 +13,15 @@
   <property name="windowTitle">
    <string>Twitter text analyser</string>
   </property>
-  <widget class="QWidget" name="widget_central_widget"/>
+  <widget class="QWidget" name="widget_central_widget">
+   <property name="styleSheet">
+    <string notr="true">QWidget#widget_central_widget { 
+
+     border: 2px solid gray; 
+  
+ } </string>
+   </property>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>

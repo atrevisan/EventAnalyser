@@ -7,10 +7,10 @@ from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
 
 import os
-from time import time
 
 import PIL
 from PIL import Image
+import pickle
 
 from core.gui.ui_widget_wordcloud import Ui_widget_wordcloud
 from core.textutils.wordcloud import WordCloud
@@ -22,20 +22,19 @@ class WidgetWordcloud(QWidget, Ui_widget_wordcloud):
     -------
     The wordcloud is generated based on a vectorizer that is used
     to calculate the importance of each word in the dataset.
-
-    Parameters
-    ----------
-    file_name : string
-        The base file name for the wordcloud that is being loaded.
     """
-    def __init__(self, file_name):
+    def __init__(self):
 
         QWidget.__init__(self)
         
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
 
-        wordcloud_file_name = os.getcwd() + "\\wordclouds\\" + file_name + ".png"
+        clusterized_dataset_path_file = os.getcwd() + r"\core\gui\clusterized_dataset_path.pkl" 
+        with open(clusterized_dataset_path_file, 'rb') as handle:
+            clusterized_dataset_path = pickle.loads(handle.read())
+
+        wordcloud_file_name = clusterized_dataset_path[:-4] + "_wordcloud.png"
         
         image = QtGui.QImage(wordcloud_file_name)
         pp = QtGui.QPixmap.fromImage(image)

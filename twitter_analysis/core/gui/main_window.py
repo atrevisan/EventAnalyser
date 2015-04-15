@@ -12,6 +12,8 @@ from core.gui.widget_fetch_tweets import WidgetFetchTweets
 from core.gui.widget_analyse_tweets import WidgetAnalyseTweets
 from core.gui.widget_clustering_config import WidgetClusteringConfig
 from core.gui.widget_load_data import WidgetLoadData
+from core.gui.widget_wordcloud import WidgetWordcloud
+from core.gui.widget_wordcloud_per_cluster import WidgetWordcloudPerCluster
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -37,6 +39,8 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_fetch_tweets.triggered.connect(self.add_widget_fetch_tweets)
         self.action_clustering_config.triggered.connect(self.add_widget_clustering_config)
         self.action_load_dataset.triggered.connect(self.add_widget_load_dataset)
+        self.action_wordcloud.triggered.connect(self.add_widget_wordcloud)
+        self.action_wordcloud_per_cluster.triggered.connect(self.add_widget_wordcloud_per_cluster)
         
 
     def add_widget_clustering_config(self):
@@ -83,3 +87,23 @@ class MainWindow(QMainWindow, Ui_main_window):
        
         widget_load_data = WidgetLoadData(self.menu_analyse_tweets)
         self.setCentralWidget(widget_load_data)
+
+    def add_widget_wordcloud(self):
+        """Replaces the current widget for a new widget_wordcloud.
+        
+        This widget displays a wordcloud for the top ngrams in
+        the dataset.
+        """
+
+        widget_wordcloud = WidgetWordcloud()
+        self.setCentralWidget(widget_wordcloud)
+
+    def add_widget_wordcloud_per_cluster(self):
+        """Replaces the current widget for a new widget_wordcloud_per_cluster.
+        
+        This widget displays a wordcloud for the top ngrams in
+        the chosen dataset cluster.
+        """
+
+        widget_wordcloud_per_cluster = WidgetWordcloudPerCluster()
+        self.setCentralWidget(widget_wordcloud_per_cluster)

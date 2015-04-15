@@ -44,7 +44,7 @@ class WidgetLoadData(QWidget, Ui_widget_load_dataset):
     def load_dataset_path(self):
         """Load clusterized dataset path and save it for future analysis."""
 
-        file_name = QtGui.QFileDialog.getOpenFileName(self, "Load filename", os.getcwd() + "\\tweets\\", "*.csv")
+        file_name = QtGui.QFileDialog.getOpenFileName(self, "Load filename", os.getcwd() + "\\clusterized_tweets\\", "*.csv")
         self.lineEdit.setText(file_name)
 
         clusterized_dataset_path_file = os.getcwd() + r"\core\gui\clusterized_dataset_path.pkl"

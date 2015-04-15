@@ -8,10 +8,10 @@ from PyQt4 import QtGui, QtCore
 
 import os
 import os.path
-from time import time
 
 import PIL
 from PIL import Image
+import pickle
 
 from core.gui.ui_widget_wordcloud_per_cluster import Ui_widget_wordcloud_per_cluster
 from core.textutils.wordcloud import WordCloud
@@ -21,31 +21,27 @@ class WidgetWordcloudPerCluster(QWidget, Ui_widget_wordcloud_per_cluster):
     
     The wordcloud is generated based on a vectorizer that is used
     to calculate the importance of each word in the dataset.
-
-    Parameters
-    ----------
-    file_name : string
-        The base file name for the wordclouds that are being loaded
-        from each cluster.
-
-     k : int
-        The number of clusters.
     """
-    def __init__(self, file_name, k):
+    def __init__(self):
 
         QWidget.__init__(self)
 
-        self.file_name = file_name
-        
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
 
-        self.combobox_cluster.addItems(["Cluster %d" % cluster_label for cluster_label in range(k)])
+        clusterized_dataset_path_file = os.getcwd() + r"\core\gui\clusterized_dataset_path.pkl" 
+        with open(clusterized_dataset_path_file, 'rb') as handle:
+            self.clusterized_dataset_path = pickle.loads(handle.read())
+
+        with open(self.clusterized_dataset_path[:-4] + "_top_ngrams_per_cluster.pkl", 'rb') as handle:
+            top_ngrams_per_cluster = pickle.loads(handle.read())
+
+        self.combobox_cluster.addItems(["Cluster %d" % cluster_label for cluster_label in range(len(top_ngrams_per_cluster))])
         self.combobox_cluster.activated[int].connect(self.onActivated)   
 
     def onActivated(self, cluster_label):
 
-        wordcloud_file_name = os.getcwd() + "\\wordclouds\\" + self.file_name + "_cluster_" + str(cluster_label) + ".png"
+        wordcloud_file_name = self.clusterized_dataset_path[:-4] + "_wordcloud_cluster_" + str(cluster_label) + ".png"
  
         image = QtGui.QImage(wordcloud_file_name)
         pp = QtGui.QPixmap.fromImage(image)
