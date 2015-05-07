@@ -9,12 +9,15 @@ import pickle
 
 from core.gui.ui_main_window import Ui_main_window
 from core.gui.widget_fetch_tweets import WidgetFetchTweets
-from core.gui.widget_analyse_tweets import WidgetAnalyseTweets
 from core.gui.widget_clustering_config import WidgetClusteringConfig
+from core.gui.widget_sentiment_classifier_config import WidgetSentimentClassifierConfig
 from core.gui.widget_load_data import WidgetLoadData
 from core.gui.widget_wordcloud import WidgetWordcloud
 from core.gui.widget_wordcloud_per_cluster import WidgetWordcloudPerCluster
 from core.gui.widget_cosine_similarity import WidgetCosineSimilarity
+from core.gui.widget_most_retweeted_tweets import WidgetMostRetweetedTweets
+from core.gui.widget_most_retweeted_tweets_per_cluster import WidgetMostRetweetedTweetsPerCluster
+
 
 class MainWindow(QMainWindow, Ui_main_window):
     """The application main window."""
@@ -39,12 +42,14 @@ class MainWindow(QMainWindow, Ui_main_window):
         # custom event handling
         self.action_fetch_tweets.triggered.connect(self.add_widget_fetch_tweets)
         self.action_clustering_config.triggered.connect(self.add_widget_clustering_config)
+        self.action_sentiment_classifier_config.triggered.connect(self.add_widget_sentiment_classifier_config)
         self.action_load_dataset.triggered.connect(self.add_widget_load_dataset)
         self.action_wordcloud.triggered.connect(self.add_widget_wordcloud)
         self.action_wordcloud_per_cluster.triggered.connect(self.add_widget_wordcloud_per_cluster)
         self.action_cosine_similarity.triggered.connect(self.add_widget_cosine_similarity)
+        self.action_relevant_tweets.triggered.connect(self.add_widget_most_retweeted_tweets)
+        self.action_relevant_tweets_per_cluster.triggered.connect(self.add_widget_most_retweeted_tweets_per_cluster)
         
-
     def add_widget_clustering_config(self):
         """Replace the current widget for a new widget widget_clustering_config.
         
@@ -54,6 +59,16 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         widget_clustering_config = WidgetClusteringConfig()
         self.setCentralWidget(widget_clustering_config)
+
+    def add_widget_sentiment_classifier_config(self):
+        """Replace the current widget for a new widget widget_sentiment_classifier_config.
+        
+        This widget displays gui elements for dealing with the configuration 
+        of the tweets sentiment classification procedure.
+        """
+
+        widget_sentiment_classification_config = WidgetSentimentClassifierConfig()
+        self.setCentralWidget(widget_sentiment_classification_config)
         
     def add_widget_fetch_tweets(self):
         """Replaces the current widget for a new widget_fetch_tweets.
@@ -64,16 +79,6 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         widget_fetch_tweets = WidgetFetchTweets()
         self.setCentralWidget(widget_fetch_tweets)
-
-    def add_widget_analyse_tweets(self):
-        """Replaces the current widget for a new analyse tweets widget.
-        
-        The analyse tweets widget contains gui elements for making text analysis
-        over Twitter text data.
-        """
-       
-        widget_analyse_tweets = WidgetAnalyseTweets()
-        self.setCentralWidget(widget_analyse_tweets)
 
     def add_widget_load_dataset(self):
         """Replaces the current widget for a new widget_load_data.
@@ -119,3 +124,23 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         widget_cosine_similarity = WidgetCosineSimilarity()
         self.setCentralWidget(widget_cosine_similarity)
+
+    def add_widget_most_retweeted_tweets(self):
+        """Replaces the current widget for a new widget_most_retweeted_tweets.
+        
+        This widget ranks the top most retweeted tweets in descending order of
+        importance.
+        """
+
+        widget_most_retweet_tweets = WidgetMostRetweetedTweets()
+        self.setCentralWidget(widget_most_retweet_tweets)
+
+    def add_widget_most_retweeted_tweets_per_cluster(self):
+        """Replaces the current widget for a new widget_most_retweeted_tweets_per_cluster.
+        
+        This widget ranks the top most retweeted tweets in the chosen cluster in descending order of
+        importance.
+        """
+
+        widget_most_retweet_tweets_per_cluster = WidgetMostRetweetedTweetsPerCluster()
+        self.setCentralWidget(widget_most_retweet_tweets_per_cluster)

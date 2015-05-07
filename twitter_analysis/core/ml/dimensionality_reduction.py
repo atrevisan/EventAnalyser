@@ -42,20 +42,23 @@ class DimensionalityReduction:
             reduced training data.
         """
 
-        #print("Performing dimensionality reduction using LSA")
-        t0 = time()
-
         svd = TruncatedSVD(n_components)
-        lsa = make_pipeline(svd, Normalizer(copy=False))
+        self.lsa = make_pipeline(svd, Normalizer(copy=False))
 
-        X = lsa.fit_transform(self.trainning_data)
-
-        #print("done in %fs" % (time() - t0))
-        #print("n_samples: %d, n_features: %d" % X.shape)
+        X = self.lsa.fit_transform(self.trainning_data)
 
         self.explained_variance = int (svd.explained_variance_ratio_.sum() * 100)
-        #print("Explained variance of the SVD step: {}%".format(self.explained_variance))
+        
+        return X
 
-        #print()
+    def transform_test_data(self, test_data):
+        """Use lsa object to reduce test data.
+        
+        Parameters
+        ----------
+        test_data : array [n_samples, n_features]
+            Vectorized test data.
+        """
 
+        X = self.lsa.transform(test_data)
         return X

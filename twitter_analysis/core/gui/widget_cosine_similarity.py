@@ -1,5 +1,5 @@
 # Author: Allan Caminha Trevisan <allan.trvsn@gmail.com>
-# (c) 2014
+# (c) 2015
 #
 # License: MIT
 

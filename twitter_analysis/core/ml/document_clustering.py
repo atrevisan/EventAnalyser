@@ -115,14 +115,18 @@ class DocumentClustering:
         for i in range(self.k):
             #print("Cluster %d:\n" % i)
             top_ngrams = [(feature_names[ind], self.cluster_centers[i][ind]) for ind in order_centroids[i, :max_ngrams_per_cluster]]
-            #for word in top_words:
-                #print(' %s\n' % word, end='')
+       
             top_ngrams_per_cluster.append(top_ngrams)
       
         return top_ngrams_per_cluster
 
-    def predict_clusters(self):
+    def predict_clusters(self, test_data):
         """Return the index of the cluster each trainning example belongs to.
+        
+        Parameters
+        ---------
+        test_data : matrix[n_samples, n_features]
+            Vectorized text documents.
 
         Returns
         -------
@@ -130,6 +134,6 @@ class DocumentClustering:
             Index of the cluster each sample belongs to.
         """
               
-        cluster_labels = self.km.predict(self.trainning_data)
+        cluster_labels = self.km.predict(test_data)
         
         return cluster_labels

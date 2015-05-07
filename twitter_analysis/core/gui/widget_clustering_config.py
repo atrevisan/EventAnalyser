@@ -5,7 +5,6 @@
 
 from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
-import PyQt4
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QApplication, QCursor
 from PyQt4.QtGui import QMessageBox
@@ -21,6 +20,7 @@ from core.textutils.feature_extraction import FeatureExtractor
 from core.ml.document_clustering import DocumentClustering
 from core.textutils.wordcloud import WordCloud
 from core.textutils.text_pre_processing import get_stopwords_list
+from core.textutils.text_pre_processing import pre_process_tweet_text
 
 class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
     """This widget displays a range of options for k-means clustering configuration.
@@ -30,9 +30,6 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
     tweets : list of tuples
         Store tweets in the form (created_at, retweet_count, tweet_text, latitude, longitude).
 
-    hashtags : dict
-        Map hashtags to frequencies.
-
     dataset_top_ngrams : list of tuples (string, number)
         The global importance of each ngram in a text corpus in descending order. 
 
@@ -41,15 +38,17 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         (ngram, weight), where weight is the centroid component value for the 
         given ngram.
 
-    cluster_labels : array [n_samples]
-        Index of the cluster each sample belongs to.
+    vectorizer : sklearn.text vectorizer object
+        Reference to the vectorizer object used to vectorize the training documents used in the clustering
+        procedure. This object needs to be persisted for transforming unseen documents  into test matrices.
+        It is also persisted because of the analyse function that extracts feature names from raw documents.
 
-     vectorizer : sklearn.text vectorizer object
-        Reference to the vectorizer object that handles feature
-        vectorization into trainning matrices.
+    fe : FeatureExtractor
+        Object that encapsulates functionalities for transforming pre-processed text documents
+        into training matrices used in document clustering.
 
-     fe : FeatureExtractor
-        Handles extraction of feature names from trainning data
+    dc : DocumentClustering
+        Object that perform clusterization of vectorized text documents. 
     """
     def __init__(self):
 
@@ -119,11 +118,6 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
 
         Calculate also the percentage of stopwords in the corpus and the corpus lexical
         diversity.
-        
-        Notes
-        -------
-        Each csv file has also a binary file associated that contains hashtags
-        stored in a dict format.
         """
             
         # user chosen file 
@@ -134,10 +128,6 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
             csv_reader = csv.reader(f, delimiter=';', quotechar='|')
             for tweet in csv_reader:
                 self.tweets.append((tweet[0], tweet[1], tweet[2], tweet[3], tweet[4]))
-
-        # loading hashtags
-        with open(file_name[:-4] + "_hashtags.txt", 'rb') as handle:
-            self.hashtags = pickle.loads(handle.read())
 
         self.groupBox.setDisabled(False)
         self.groupBox_2.setDisabled(False)
@@ -170,18 +160,19 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         binary = self.check_binary.isChecked()
         remove_stopwords = self.check_remove_stopwords.isChecked()
         
-        tweets = [tweet[2] for tweet in self.tweets]
+        # Pre process tweets and keep only the tweets that aren't retweets
+        tweets = [pre_process_tweet_text(tweet[2]) for tweet in self.tweets if not "rt" in tweet[2] and not "RT" in tweet[2]]
       
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         
         self.fe = FeatureExtractor(tweets, 
-                              max_df=max_df, 
-                              min_df=min_df,
-                              max_features=max_features, 
-                              ngram_range=ngram_range, 
-                              use_stemming=use_stemming,
-                              binary=binary,
-                              remove_stopwords=remove_stopwords) 
+                                   max_df=max_df, 
+                                   min_df=min_df,
+                                   max_features=max_features, 
+                                   ngram_range=ngram_range, 
+                                   use_stemming=use_stemming,
+                                   binary=binary,
+                                   remove_stopwords=remove_stopwords) 
 
         try:
             if vectorizer == "tfidf vectorizer":
@@ -194,7 +185,7 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
             self.dataset_top_ngrams = self.fe.get_top_ngrams()
             self.vectorizer = self.fe.vectorizer
 
-            n_features = self.fe.X.shape[1]
+            n_features = self.fe.training_data.shape[1]
             self.label_features.setText(str(n_features))
 
         except ValueError:
@@ -203,7 +194,12 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         QApplication.restoreOverrideCursor()
 
     def start_clustering(self):
-        """Perform the clustering procedure."""
+        """Perform the clustering procedure.
+        
+        The procedure consists in fitting the model to the training data and
+        obtaining the top ngram features for each obtained cluster and how
+        good was the clusterization procedure trough a silhuette coefficient.
+        """
     
         k = list(range(2, 11))[self.combo_num_of_clusters.currentIndex()]
         use_minibatch = self.check_use_minibatch.isChecked()
@@ -212,25 +208,24 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         n_components = list(range(2, max_features + 1))[self.combo_num_of_components.currentIndex()]
 
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-        dc = DocumentClustering(self.fe.X, perform_lsa=perform_lsa, n_components=n_components)
+        self.dc = DocumentClustering(self.fe.training_data, perform_lsa=perform_lsa, n_components=n_components)
 
         if use_minibatch:
-            dc.k_means(k, use_minibatch=use_minibatch)
+            self.dc.k_means(k, use_minibatch=use_minibatch)
         else:
-            dc.k_means(k)
+            self.dc.k_means(k)
 
         feature_names = self.fe.feature_names
-        self.top_ngrams_per_cluster = dc.get_top_ngrams_per_cluster(feature_names)
-        self.cluster_labels = dc.predict_clusters()
+        self.top_ngrams_per_cluster = self.dc.get_top_ngrams_per_cluster(feature_names)
             
-        clusterization_time = dc.clusterization_time
-        silhuette_coefficient = dc.silhuette_coefficient
+        clusterization_time = self.dc.clusterization_time
+        silhuette_coefficient = self.dc.silhuette_coefficient
         
         self.label_clusterization_time.setText(clusterization_time)
         self.label_silhuette_coefficient.setText(silhuette_coefficient)
             
         if perform_lsa:
-            self.label_explained_variance.setText(str(dc.explained_variance) + "%")
+            self.label_explained_variance.setText(str(self.dc.explained_variance) + "%")
        
         QApplication.restoreOverrideCursor()
       
@@ -272,17 +267,20 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
     def save_clusterized_data(self):
         """Save the clustering configuration for the chosen dataset.
         
-        This procedure saves the clusterized dataset, the dataset top 
-        ngrams, the top ngrams per cluster, the cluster labels to wich
-        each tweet belongs to and the analyser function used for text tokenization. 
+        This procedure saves the clusterized dataset informing to which cluster
+        each document belongs to (its labels). It saves also the dataset top 
+        ngrams, the top ngrams per cluster and the vectorizer object used for text tokenization. 
         This procedure also generates the dataset wordcloud and wordclouds per cluster 
         and save them in the file system for future analysis. 
         """
 
+        tweets_text = [pre_process_tweet_text(tweet[2]) for tweet in self.tweets]
+        cluster_labels = self.dc.predict_clusters(self.vectorizer.transform(tweets_text))
+
         # adds to each tweet the cluster it belongs to
         tweets = [(cluster_label, tweet_date, retweet_count, tweet_text, latitude, longitude) 
                   for cluster_label, (tweet_date, retweet_count, tweet_text, latitude, longitude) 
-                    in zip(self.cluster_labels, self.tweets)]
+                    in zip(cluster_labels, self.tweets)]
         
         file_name = QtGui.QFileDialog.getSaveFileName(self, "Save data", os.getcwd() + "\\clusterized_tweets\\", "*.csv")
 
@@ -295,9 +293,7 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         # save objects that will be used in the tweets text analysis
         self.save_object(self.dataset_top_ngrams, file_name + "_dataset_top_ngrams.pkl")
         self.save_object(self.top_ngrams_per_cluster, file_name + "_top_ngrams_per_cluster.pkl")
-        #self.save_object(self.cluster_labels, file_name + "_cluster_labels.pkl")
-        self.save_object(self.hashtags, file_name + "_hashtags.pkl")
-
+        
         # Save the vectorizer used to extract features for
         # later recover of the analyser function used
         # for data tokenization

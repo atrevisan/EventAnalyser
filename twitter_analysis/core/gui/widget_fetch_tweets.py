@@ -7,7 +7,7 @@ from PyQt4.QtGui import QWidget
 from PyQt4 import QtGui, QtCore
 
 from core.gui.ui_widget_fetch_tweets import Ui_widget_fetch_tweets
-from core.textutils.text_pre_processing import pre_process_tweet_text
+from core.textutils.text_pre_processing import declutter_tweet_text
 
 from twython import Twython
 from time import sleep
@@ -25,9 +25,6 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
     -------
     _active : Boolean
         It keeps the fetching process state.
-
-    hashtags : dict
-        map hashtags to frequencies.
 
     tweets : list of tuples
         store tweets in the form (created_at, retweet_count, tweet_text, latitude, longitude).
@@ -111,33 +108,10 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
     def closeEvent(self, event):
        self._active = False
 
-    def add_hashtags(self, hashtags_list):
-        """Add hashtags from a given tweet to a dict mapping hashtags to frequencies.
-           
-        Parameters
-        ----------
-        hashtags_list : list
-            hashtags from a given tweet
-        """
-
-        for hashtag in hashtags_list:
-
-            hashtag = hashtag.lower()
-            if hashtag in self.hashtags:
-                self.hashtags[hashtag] += 1
-            else:
-                self.hashtags[hashtag] = 1
-
-
     def ask_twitter(self):
         """It fetches the tweets that correspond to a given search querry supplied by the user.
         
         It uses the Twithon api for fetching tweets. The tweets are fetched in a paginated fashion.
-        Calls the pre_process_tweet_text() and add_hashtags() functions.
-        
-        Parameters
-        ----------
-        self
         """
 
         querry = self.line_edit_querry.text()
@@ -151,7 +125,6 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         
         self.tweets = []
         tweet_text_list = []
-        self.hashtags = {}
      
         i = 0
         tweet_count = 0
@@ -199,12 +172,8 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
                             longitude = coordinates[1]
 
                     tweet_text = result['text']
-                    hashtags_list = re.findall(r"#([^\s]+)", tweet_text)
+                    tweet_text = declutter_tweet_text(tweet_text)
 
-                    if len(hashtags_list):
-                        self.add_hashtags(hashtags_list)
-
-                    tweet_text = pre_process_tweet_text(result['text'])
                     created_at = result["created_at"]
                     retweet_count = result["retweet_count"]
             
@@ -240,14 +209,9 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
             print ("Finished fetching")
            
     def save_tweets(self):
-        """It saves the fetched tweets to the user chosen directory location in response for a click event.
+        """It saves the fetched tweets to the user chosen directory location.
  
         It stores the retrived tweets to a csv file in the format: (date, retweet_count, tweet_text, latitutude, longitude). 
-        It also stores a file containing hashtag counts in a dict format.
-
-        Parameters
-        ----------
-        self
         """
         
         if self._active:
@@ -265,19 +229,11 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         for tweet in self.tweets:
             csv_writer.writerow(['|'+str(tweet[0])+'|', '|'+str(tweet[1])+'|', '|'+tweet[2]+'|', '|'+str(tweet[3])+'|', '|'+str(tweet[4])+'|'])
         csv_file.close()
-           
-        with open(file_name + "_hashtags.txt", 'wb') as handle:
-            pickle.dump(self.hashtags, handle)
 
     def append_to_file(self):
         """It appends the fetched tweets to the user file of choise.
  
         It stores the retrived tweets to a csv file in the format: (date, retweet_count, tweet_text, latitutude, longitude). 
-        It also stores a file containing hashtag counts in a dict format.
-
-        Parameters
-        ----------
-        self
         """
         
         if self._active:
@@ -291,20 +247,4 @@ class WidgetFetchTweets(QWidget, Ui_widget_fetch_tweets):
         for tweet in self.tweets:
             csv_writer.writerow(['|'+str(tweet[0])+'|', '|'+str(tweet[1])+'|', '|'+tweet[2]+'|', '|'+str(tweet[3])+'|', '|'+str(tweet[4])+'|'])
         csv_file.close()
-
-        # loading hashtags
-        with open(file_name[:-4] + "_hashtags.txt", 'rb') as handle:
-            hashtags = pickle.loads(handle.read())
-           
-
-        # updating hashtags dict
-        for hashtag in self.hashtags.items():
-
-            if hashtag in hashtags:
-                hashtags[hashtag] += 1
-            else:
-                hashtags[hashtag] = 1
-
-        with open(file_name[:-4] + "_hashtags.txt", 'wb') as handle:
-            pickle.dump(hashtags, handle)
             

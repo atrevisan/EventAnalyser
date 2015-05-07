@@ -62,7 +62,7 @@ class FeatureExtractor:
 
     Atributes
     ----------
-    X : array[n_samples, n_features]
+    training_data : array[n_samples, n_features]
         Vectorized trainning data.
 
     vectorizer : sklearn.text vectorizer object
@@ -123,16 +123,16 @@ class FeatureExtractor:
 
         #t0 = time()
         self.vectorizer = CountVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
-                                     max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
-                                     binary=self.binary) 
+                                          max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
+                                          binary=self.binary) 
 
-        self.X = self.vectorizer.fit_transform(self.raw_data)
+        self.training_data = self.vectorizer.fit_transform(self.raw_data)
         self.vocabulary = self.vectorizer.vocabulary_
         self.feature_names = self.vectorizer.get_feature_names()
         self.vectorizer.build_analyzer()
 
         #print("done in %fs" % (time() - t0))
-        #print("n_samples: %d, n_features: %d" % self.X.shape)
+        #print("n_samples: %d, n_features: %d" % self.training_data.shape)
         #print()
 
     def tfidf_vectorizer(self, use_idf=True):
@@ -147,17 +147,19 @@ class FeatureExtractor:
         #print("Extracting features from dataset using a tf-idf vectorizer")
         #print()
 
-        t0 = time()
+        #t0 = time()
         self.vectorizer = TfidfVectorizer(ngram_range=self.ngram_range, stop_words=self.stop_words, 
-                                           max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
-                                           use_idf=use_idf, binary=self.binary) 
+                                          max_df=self.max_df, min_df=self.min_df, max_features=self.max_features,
+                                          use_idf=use_idf, binary=self.binary) 
 
-        self.X = self.vectorizer.fit_transform(self.raw_data)
+        self.training_data = self.vectorizer.fit_transform(self.raw_data)
+        
         self.vocabulary = self.vectorizer.vocabulary_
         self.feature_names = self.vectorizer.get_feature_names()
-    
+        self.vectorizer.build_analyzer()
+
         #print("done in %fs" % (time() - t0))
-        #print("n_samples: %d, n_features: %d" % X.shape)
+        #print("n_samples: %d, n_features: %d" % self.training_data.shape)
         #print()
 
     def get_top_ngrams(self, max_ngrams=20):
@@ -178,7 +180,7 @@ class FeatureExtractor:
             The global importance of each ngram in a text corpus in descending order. 
         """
 
-        freqs = [(ngram, self.X.getcol(idx).sum()) for ngram, idx in self.vocabulary.items()]
+        freqs = [(ngram, self.training_data.getcol(idx).sum()) for ngram, idx in self.vocabulary.items()]
         
         #sort from largest to smallest
         top_ngrams = sorted (freqs, key = lambda x: -x[1])
@@ -200,14 +202,13 @@ class FeatureExtractor:
             the querry, so it is ignored later).
         """
 
-        cosine_similarities = cosine_similarity(self.X[0:1], self.X)
+        cosine_similarities = cosine_similarity(self.training_data[0:1], self.training_data)
         related_docs_indices = cosine_similarities.argsort().tolist()[0]
         related_docs_indices = related_docs_indices[:-max_documents:-1]
   
-
         top_documents = []
         for i in range(len(related_docs_indices)):
             top_documents.append(self.raw_data[related_docs_indices[i]])
  
-        return top_documents
+        return top_documents[1:]
 
