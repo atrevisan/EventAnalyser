@@ -37,7 +37,7 @@ def declutter_tweet_text(tweet_text):
     tweet_text = tweet_text.replace('\"', '')
     tweet_text = tweet_text.replace(';', '')
     tweet_text = tweet_text.replace('|', '')
-    tweet_text = tweet_text.replace(':', '')
+    #tweet_text = tweet_text.replace(':', '')
     tweet_text = tweet_text.replace('.', '')
     tweet_text = tweet_text.replace('?', '')
     tweet_text = tweet_text.replace('!', '')

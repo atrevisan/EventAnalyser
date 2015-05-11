@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTextEdit" name="text_edit_classification_report"/>
+    <layout class="QVBoxLayout" name="vlayout_table"/>
    </item>
    <item>
     <widget class="QPushButton" name="button_ok">

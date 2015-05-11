@@ -14,10 +14,13 @@ import numpy as np
 import csv
 import pickle
 import itertools
-                 
+          
+from core.gui.widget_classification_report import WidgetClassificationReport       
 from core.gui.ui_widget_sentiment_classifier_config import Ui_widget_sentiment_classifier_config                        
 from core.textutils.feature_extraction import FeatureExtractor
 from core.ml.document_classification import DocumentClassification
+
+from core.textutils.text_pre_processing import pre_process_tweet_text
 
 
 class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_config):
@@ -52,6 +55,8 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
 
         # set up User Interface (widgets, layout...)
         self.setupUi(self)
+
+        self.widget_classification_report = None
 
         self.positive_sentiment_dataset = []
         self.negative_sentiment_dataset = []
@@ -162,6 +167,10 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
         binary = self.check_binary.isChecked()
         remove_stopwords = self.check_remove_stopwords.isChecked()
         
+        # Pre process tweets, keep only the tweets that aren't retweets and removes ambiguous sentiment tweets
+        self.positive_sentiment_dataset = [pre_process_tweet_text(tweet) for tweet in self.positive_sentiment_dataset if not "rt" in tweet and not "RT" in tweet and not ":(" in tweet and not ":-(" in tweet and not ": (" in tweet]
+        self.negative_sentiment_dataset = [pre_process_tweet_text(tweet) for tweet in self.negative_sentiment_dataset if not "rt" in tweet and not "RT" in tweet and not ":)" in tweet and not ":-)" in tweet and not ": )" in tweet and not ":D" in tweet and not "=)" in tweet and not ":p" in tweet and not ":P" in tweet]
+
         # balancing positive/negative class dataset size
         if len(self.positive_sentiment_dataset) > len(self.negative_sentiment_dataset):
             self.positive_sentiment_dataset = self.positive_sentiment_dataset[:len(self.negative_sentiment_dataset)]
@@ -196,10 +205,10 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
             else:
                 self.fe.count_vectorizer()
 
-            self.training_data = self.fe.X
+            self.training_data = self.fe.training_data
             self.test_data = self.fe.vectorizer.transform(test_data)
             
-            n_features = self.fe.X.shape[1]
+            n_features = self.fe.training_data.shape[1]
             self.label_features.setText(str(n_features))
 
         except ValueError:
@@ -231,6 +240,9 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
             
         if perform_lsa:
             self.label_explained_variance.setText(str(self.dc.explained_variance) + "%")
+
+        self.widget_classification_report = WidgetClassificationReport(self.dc.report_string)
+        self.widget_classification_report.show()
        
         QApplication.restoreOverrideCursor()
     
@@ -258,7 +270,7 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
         unseen data can be vectorized.
         """
 
-        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save model", os.getcwd() + "\\sentiment_classification_models\\", "*.csv")
+        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save model", os.getcwd() + "\\sentiment_classification_models\\", "*.pkl")
 
         # Case the user select an already existent file
         if file_name.find(".pkl") != -1:

@@ -96,14 +96,15 @@ class DocumentClassification:
 
         self.min_max_scaler = preprocessing.MinMaxScaler()
         
-        # scaled training data
-        training_data = min_max_scaler.fit_transform(self.training_data)
-
         t0 = time()
+
+        # scaled training data
+        training_data = self.min_max_scaler.fit_transform(self.training_data.todense())
+
         self.clf = LinearSVC(C=C).fit(training_data, self.training_labels)
         self.classification_time = "%0.3fs" % (time() - t0)
 
-        test_data = self.min_max_scaler.transform(self.test_data)
+        test_data = self.min_max_scaler.transform(self.test_data.todense())
         predicted = self.clf.predict(test_data)
 
         target_names = ['positive sentiment', 'negative sentiment']
