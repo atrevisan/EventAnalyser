@@ -124,7 +124,7 @@ class DocumentClassification:
             Predicted class label per sample.
         """
 
-        if perform_lsa:
+        if self.perform_lsa:
             vectorized_documents = self.dr.transform_test_data(vectorized_documents)
 
         # if svm perform feature scaling

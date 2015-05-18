@@ -270,16 +270,16 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
         unseen data can be vectorized.
         """
 
-        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save model", os.getcwd() + "\\sentiment_classification_models\\", "*.pkl")
+        file_name = QtGui.QFileDialog.getSaveFileName(self, "Save model", os.getcwd() + "\\sentiment_classification_models\\", "*.clf")
 
         # Case the user select an already existent file
-        if file_name.find(".pkl") != -1:
+        if file_name.find(".clf") != -1:
             file_name = file_name[:-4]
 
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
         self.save_object(self.fe.vectorizer, file_name + "_vectorizer.pkl")
-        self.save_object(self.dc, file_name + "_classifier.pkl")
+        self.save_object(self.dc, file_name + "_classifier.clf")
 
         QApplication.restoreOverrideCursor()
 

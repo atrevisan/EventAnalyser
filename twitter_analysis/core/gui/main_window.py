@@ -12,11 +12,14 @@ from core.gui.widget_fetch_tweets import WidgetFetchTweets
 from core.gui.widget_clustering_config import WidgetClusteringConfig
 from core.gui.widget_sentiment_classifier_config import WidgetSentimentClassifierConfig
 from core.gui.widget_load_data import WidgetLoadData
+from core.gui.widget_load_classification_model import WidgetLoadClassificationModel
 from core.gui.widget_wordcloud import WidgetWordcloud
 from core.gui.widget_wordcloud_per_cluster import WidgetWordcloudPerCluster
 from core.gui.widget_cosine_similarity import WidgetCosineSimilarity
 from core.gui.widget_most_retweeted_tweets import WidgetMostRetweetedTweets
 from core.gui.widget_most_retweeted_tweets_per_cluster import WidgetMostRetweetedTweetsPerCluster
+from core.gui.widget_sentiment import WidgetSentiment
+from core.gui.widget_sentiment_per_cluster import WidgetSentimentPerCluster
 
 
 class MainWindow(QMainWindow, Ui_main_window):
@@ -44,11 +47,14 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_clustering_config.triggered.connect(self.add_widget_clustering_config)
         self.action_sentiment_classifier_config.triggered.connect(self.add_widget_sentiment_classifier_config)
         self.action_load_dataset.triggered.connect(self.add_widget_load_dataset)
+        self.actionLoad_sentiment_classification_model.triggered.connect(self.add_widget_load_sentiment_classification_model)
         self.action_wordcloud.triggered.connect(self.add_widget_wordcloud)
         self.action_wordcloud_per_cluster.triggered.connect(self.add_widget_wordcloud_per_cluster)
         self.action_cosine_similarity.triggered.connect(self.add_widget_cosine_similarity)
         self.action_relevant_tweets.triggered.connect(self.add_widget_most_retweeted_tweets)
         self.action_relevant_tweets_per_cluster.triggered.connect(self.add_widget_most_retweeted_tweets_per_cluster)
+        self.action_sentiment.triggered.connect(self.add_widget_sentiment)
+        self.action_sentiment_per_cluster.triggered.connect(self.add_widget_sentiment_per_cluster)
         
     def add_widget_clustering_config(self):
         """Replace the current widget for a new widget widget_clustering_config.
@@ -79,6 +85,26 @@ class MainWindow(QMainWindow, Ui_main_window):
 
         widget_fetch_tweets = WidgetFetchTweets()
         self.setCentralWidget(widget_fetch_tweets)
+        
+    def add_widget_sentiment(self):
+        """Replaces the current widget for a new widget_sentiment.
+        
+        This widget has gui elements for displaying the percentage of
+        positive/negative sentiment overt a tweets dataset.
+        """
+
+        widget_sentiment = WidgetSentiment()
+        self.setCentralWidget(widget_sentiment)
+
+    def add_widget_sentiment_per_cluster(self):
+        """Replaces the current widget for a new widget_sentiment_per_cluster.
+        
+        This widget has gui elements for displaying the percentage of
+        positive/negative sentiment over a chosen cluster of tweets.
+        """
+
+        widget_sentiment_per_cluster = WidgetSentimentPerCluster()
+        self.setCentralWidget(widget_sentiment_per_cluster)
 
     def add_widget_load_dataset(self):
         """Replaces the current widget for a new widget_load_data.
@@ -91,9 +117,19 @@ class MainWindow(QMainWindow, Ui_main_window):
         The tweets text analysis menu items are enabled only if
         there is some clusterized dataset path loaded.
         """
-       
+
         widget_load_data = WidgetLoadData(self.menu_analyse_tweets)
         self.setCentralWidget(widget_load_data)
+
+    def add_widget_load_sentiment_classification_model(self):
+        """Replaces the current widget for a new widget_load_sentiment_classification_model.
+        
+        This widget has gui elements for loading the sentiment classification model
+        path.
+        """
+
+        widget_load_sentiment_classification_model = WidgetLoadClassificationModel()
+        self.setCentralWidget(widget_load_sentiment_classification_model)
 
     def add_widget_wordcloud(self):
         """Replaces the current widget for a new widget_wordcloud.

@@ -16,8 +16,6 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 from core.textutils.text_pre_processing import get_stopwords_list
-from core.textutils.feature_extraction import FeatureExtractor
-
 
 item1 = itemgetter(1)
 
