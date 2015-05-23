@@ -36,6 +36,10 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
         will take place throughout the months in the chosen year that are present in the clusterized
         tweets corpus.
 
+    month : string
+        The month chosen by the user in the combo box. The distribution info for the chosen ngram
+        will take place troughout the days in the chosen month.
+
     tokenize : callable
         Function that handles tokenization of text documents in its contitutent features (n-grams). 
 
@@ -81,6 +85,24 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
         with open(self.clusterized_dataset_path[:-4] + "_feature_extractor.pkl", 'rb') as handle:
             clustering_feature_extractor = pickle.loads(handle.read())
 
+        list_of_years = []
+        list_of_months = []
+        list_of_days = []
+        for tweet in self.tweets:
+
+            tweet_time = tweet[1]
+            tweet_year = tweet_time.split()[5]
+            tweet_month = tweet_time.split()[1]
+            tweet_day = tweet_time.split()[2]
+
+            list_of_years.append(tweet_year)
+            list_of_months.append(tweet_month)
+            list_of_days.append(tweet_day)
+
+        self.combo_year.addItems(list(set(list_of_years)))
+        self.combo_month.addItems(list(set(list_of_months)))
+        self.combo_day.addItems(list(set(list_of_days)))
+
         self.tokenize = clustering_feature_extractor.vectorizer.build_analyzer()
 
         self.twitter_data_analyser = TwitterDataAnalysis(self.tweets)
@@ -90,11 +112,11 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
         self.combo_ngrams.activated[str].connect(self.on_activated_combo_ngrams)
 
         self.combo_year.activated[str].connect(self.on_activated_combo_year)
-        #self.combo_month.activated[str].connect(self.on_activated_combo_month)
+        self.combo_month.activated[str].connect(self.on_activated_combo_month)
         #self.combo_day.activated[str].connect(self.on_activated_combo_day)
 
         self.button_info_per_month.clicked.connect(self.generate_info_per_month)
-        #self.button_info_per_day.clicked.connect(self.generate_info_per_day)
+        self.button_info_per_day.clicked.connect(self.generate_info_per_day)
         #self.button_info_per_hour.clicked.connect(self.generate_info_per_hour)
 
     def on_activated_combo_ngrams(self, ngram):
@@ -113,15 +135,6 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
 
         self.combo_year.setDisabled(False)
         self.button_info_per_month.setDisabled(False)
-        
-        list_of_years = []
-        for tweet in self.tweets:
-
-            tweet_time = tweet[1]
-            tweet_year = tweet_time.split()[5]
-            list_of_years.append(tweet_year)
-
-        self.combo_year.addItems(list(set(list_of_years)))
 
     def on_activated_combo_year(self, year):
         """Handle event on the combo box year.
@@ -135,6 +148,25 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
         """
 
         self.year = year
+
+        self.combo_month.setDisabled(False)
+        self.button_info_per_day.setDisabled(False)
+
+    def on_activated_combo_month(self, month):
+        """Handle event on the combo box month.
+        
+        Sets the chosen month variable. The respective seted value will
+        be used to generate the n-gram distribution troughout
+        the days of the month.
+
+        month : str
+            The month chosen by the user in the combo box.
+        """
+
+        self.month = month
+
+        self.combo_day.setDisabled(False)
+        self.button_info_per_hour.setDisabled(False)
 
     def generate_info_per_month(self):
         """Generate the infos for the ngram across the months in the chosen year.
@@ -173,9 +205,44 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
                                                    "Month", "Frequency", "N-gram frequncy", 
                                                    max_y, x_ticks=x_ticks)  
          
-            self.plot_figure(plot_file_name)   
+            self.plot_figure(plot_file_name)  
             
-             
+    def generate_info_per_day(self):
+        """Generate the infos for the ngram across the days in the chosen month.
+        
+        The info could be the frequency, retweets, positive sentiment or negative sentiment
+        relations to the chosen ngram (namely absolute frequency, mean frequency and max frequency).
+        """
+
+        if self.radio_frequency.isChecked():
+           
+            ngram_info_per_day = self.twitter_data_analyser.generate_ngram_frequency_info_per_day(self.ngram, 
+                                                                                                  self.month, 
+                                                                                                  self.tokenize)
+
+            ngram_info_per_day = [(int(day), total, average, max) for day, total, average, max in ngram_info_per_day]
+            ngram_info_per_day = sorted(ngram_info_per_day, key=lambda x : x[0])
+
+            y_total = [total for (day, total, average, max) in ngram_info_per_day]
+            x_total = [day for (day, total, average, max) in ngram_info_per_day]
+
+            y_average = [average for (day, total, average, max) in ngram_info_per_day]
+            x_average = [day for (day, total, average, max) in ngram_info_per_day]
+
+            y_max = [max for (day, total, average, max) in ngram_info_per_day]
+            x_max = [day for (day, total, average, max) in ngram_info_per_day]
+            
+            max_y = sorted ([total for (day, total, average, max) in ngram_info_per_day], key=lambda x : -x)[0]
+            
+            plot_file_name = self.clusterized_dataset_path[:-4] + "_" + self.ngram.replace(" ", "_") + ".png"
+            self.plot_generator.create_three_plots(plot_file_name, 
+                                                   x_total, y_total, "total", 
+                                                   x_average, y_average, "average", 
+                                                   x_max, y_max, "max", 
+                                                   "Day", "Frequency", "N-gram frequncy", 
+                                                   max_y)  
+         
+            self.plot_figure(plot_file_name)  
 
     def plot_figure(self, file_name):
 
