@@ -38,11 +38,6 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         (ngram, weight), where weight is the centroid component value for the 
         given ngram.
 
-    vectorizer : sklearn.text vectorizer object
-        Reference to the vectorizer object used to vectorize the training documents used in the clustering
-        procedure. This object needs to be persisted for transforming unseen documents  into test matrices.
-        It is also persisted because of the analyse function that extracts feature names from raw documents.
-
     fe : FeatureExtractor
         Object that encapsulates functionalities for transforming pre-processed text documents
         into training matrices used in document clustering.
@@ -183,8 +178,7 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
                 self.fe.count_vectorizer()
 
             self.dataset_top_ngrams = self.fe.get_top_ngrams()
-            self.vectorizer = self.fe.vectorizer
-
+            
             n_features = self.fe.training_data.shape[1]
             self.label_features.setText(str(n_features))
 
@@ -275,7 +269,7 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         """
 
         tweets_text = [pre_process_tweet_text(tweet[2]) for tweet in self.tweets]
-        cluster_labels = self.dc.predict_clusters(self.vectorizer.transform(tweets_text))
+        cluster_labels = self.dc.predict_clusters(self.fe.vectorizer.transform(tweets_text))
 
         # adds to each tweet the cluster it belongs to
         tweets = [(cluster_label, tweet_date, retweet_count, tweet_text, latitude, longitude) 
@@ -294,10 +288,10 @@ class WidgetClusteringConfig(QWidget, Ui_widget_clustering_config):
         self.save_object(self.dataset_top_ngrams, file_name + "_dataset_top_ngrams.pkl")
         self.save_object(self.top_ngrams_per_cluster, file_name + "_top_ngrams_per_cluster.pkl")
         
-        # Save the vectorizer used to extract features for
-        # later recover of the analyser function used
+        # Save the feature extractor used to extract features for
+        # later recover of the tokenize function used
         # for data tokenization
-        self.save_object(self.vectorizer, file_name + "_vectorizer.pkl")
+        self.save_object(self.fe, file_name + "_feature_extractor.pkl")
 
         csv_file = open(file_name + ".csv", 'w', newline='', encoding="utf-8")
         csv_writer = csv.writer(csv_file, delimiter=';', quoting=csv.QUOTE_MINIMAL)

@@ -278,7 +278,7 @@ class WidgetSentimentClassifierConfig(QWidget, Ui_widget_sentiment_classifier_co
 
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
 
-        self.save_object(self.fe.vectorizer, file_name + "_vectorizer.pkl")
+        self.save_object(self.fe, file_name + "_feature_extractor.pkl")
         self.save_object(self.dc, file_name + "_classifier.clf")
 
         QApplication.restoreOverrideCursor()

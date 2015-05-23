@@ -46,8 +46,8 @@ class WidgetSentimentPerCluster(QWidget, Ui_widget_sentiment_per_cluster):
         with open(sentiment_classification_model_path, 'rb') as handle:
             sentiment_classification_model = pickle.loads(handle.read())
 
-        with open(sentiment_classification_model_path[:-14] + "vectorizer.pkl", 'rb') as handle:
-            sentiment_classification_vectorizer = pickle.loads(handle.read())
+        with open(sentiment_classification_model_path[:-14] + "feature_extractor.pkl", 'rb') as handle:
+            sentiment_classification_feature_extractor = pickle.loads(handle.read())
 
         clusterized_dataset_path_file = os.getcwd() + r"\core\gui\clusterized_dataset_path.pkl" 
         with open(clusterized_dataset_path_file, 'rb') as handle:
@@ -60,7 +60,8 @@ class WidgetSentimentPerCluster(QWidget, Ui_widget_sentiment_per_cluster):
                 tweets.append((tweet[0], tweet[1], tweet[2], tweet[3], tweet[4], tweet[5]))
 
         twitter_data_analyser = TwitterDataAnalysis(tweets)
-        self.predicted_classes_per_cluster = twitter_data_analyser.generate_dataset_sentiment_info_per_cluster(sentiment_classification_vectorizer, sentiment_classification_model)
+        self.predicted_classes_per_cluster = twitter_data_analyser.generate_dataset_sentiment_info_per_cluster(sentiment_classification_feature_extractor, 
+                                                                                                               sentiment_classification_model)
         
         self.plot_generator = PlotGenerator()
 

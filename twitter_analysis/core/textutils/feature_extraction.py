@@ -75,6 +75,10 @@ class FeatureExtractor:
 
     vocabulary : dict mapping str to int
         Map the feature name to the respective column in X.
+
+    tokenize : callable
+        Handles preprocessing and tokenization so it is possible
+        to recover the feature names present in a given tweet.
     """
 
     def __init__(self, raw_data, ngram_range=(1,1), max_df=0.5, min_df=2, max_features=None,
@@ -129,7 +133,6 @@ class FeatureExtractor:
         self.training_data = self.vectorizer.fit_transform(self.raw_data)
         self.vocabulary = self.vectorizer.vocabulary_
         self.feature_names = self.vectorizer.get_feature_names()
-        self.vectorizer.build_analyzer()
 
         #print("done in %fs" % (time() - t0))
         #print("n_samples: %d, n_features: %d" % self.training_data.shape)
@@ -156,8 +159,7 @@ class FeatureExtractor:
         
         self.vocabulary = self.vectorizer.vocabulary_
         self.feature_names = self.vectorizer.get_feature_names()
-        self.vectorizer.build_analyzer()
-
+        
         #print("done in %fs" % (time() - t0))
         #print("n_samples: %d, n_features: %d" % self.training_data.shape)
         #print()

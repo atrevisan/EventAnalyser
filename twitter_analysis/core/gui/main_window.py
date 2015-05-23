@@ -20,6 +20,7 @@ from core.gui.widget_most_retweeted_tweets import WidgetMostRetweetedTweets
 from core.gui.widget_most_retweeted_tweets_per_cluster import WidgetMostRetweetedTweetsPerCluster
 from core.gui.widget_sentiment import WidgetSentiment
 from core.gui.widget_sentiment_per_cluster import WidgetSentimentPerCluster
+from core.gui.widget_ngrams import WidgetNGrams
 
 
 class MainWindow(QMainWindow, Ui_main_window):
@@ -55,7 +56,19 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_relevant_tweets_per_cluster.triggered.connect(self.add_widget_most_retweeted_tweets_per_cluster)
         self.action_sentiment.triggered.connect(self.add_widget_sentiment)
         self.action_sentiment_per_cluster.triggered.connect(self.add_widget_sentiment_per_cluster)
+        self.action_ngrams.triggered.connect(self.add_widget_ngrams)
+
+
+    def add_widget_ngrams(self):
+        """Replace the current widget for a new widget_ngrams.
         
+        This widget displays statistical info regarding the
+        dataset top ngrams.
+        """
+
+        widget_ngrams = WidgetNGrams()
+        self.setCentralWidget(widget_ngrams)
+
     def add_widget_clustering_config(self):
         """Replace the current widget for a new widget widget_clustering_config.
         
