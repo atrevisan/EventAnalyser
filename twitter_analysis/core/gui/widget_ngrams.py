@@ -43,6 +43,14 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
     tokenize : callable
         Function that handles tokenization of text documents in its contitutent features (n-grams). 
 
+    sentiment_feature_extractor : FeatureExtractor
+            Reference to the object used to vectorize the training documents used in the sentiment
+            classification procedure.
+
+    sentiment_classification_model : document_classification.DocumentClassification object
+            Reference to some classification model used to classify the sentiment
+            from tweets.
+
     twitter_data_analyser : TwitterDataAnalysis
         Compute statistical informations regarding the tweets.
 
@@ -81,9 +89,20 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
         with open(self.clusterized_dataset_path[:-4] + "_dataset_top_ngrams.pkl", 'rb') as handle:
             self.dataset_top_ngrams = pickle.loads(handle.read())
         
-        # Loading the vectorizer used in the clustering procedure
+        # Loading the feature extractor used in the clustering procedure
         with open(self.clusterized_dataset_path[:-4] + "_feature_extractor.pkl", 'rb') as handle:
             clustering_feature_extractor = pickle.loads(handle.read())
+
+        # Loading the sentiment classification model
+        sentiment_classification_model_path_file = os.getcwd() + r"\core\gui\sentiment_classification_model_path.clf" 
+        with open(sentiment_classification_model_path_file, 'rb') as handle:
+            sentiment_classification_model_path = pickle.loads(handle.read())
+
+        with open(sentiment_classification_model_path, 'rb') as handle:
+            self.sentiment_classification_model = pickle.loads(handle.read())
+
+        with open(sentiment_classification_model_path[:-14] + "feature_extractor.pkl", 'rb') as handle:
+            self.sentiment_classification_feature_extractor = pickle.loads(handle.read())
 
         list_of_years = []
         list_of_months = []
@@ -276,7 +295,39 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
             ngram_retweets_info_per_month = sorted(ngram_retweets_info_per_month, key=lambda x : x[0])
 
             if ngram_retweets_info_per_month:
-                self.generate_and_plot_info(ngram_retweets_info_per_month, "Month", "Frequency", "N-gram retweets", x_ticks)              
+                self.generate_and_plot_info(ngram_retweets_info_per_month, "Month", "Frequency", "N-gram retweets", x_ticks)  
+                
+      
+        elif self.radio_positive_sentiment.isChecked():
+            
+            ngram_positive_sentiment_info_per_month = self.twitter_data_analyser.generate_ngram_sentiment_info_per_month(self.ngram,
+                                                                                                                         self.year,
+                                                                                                                         self.tokenize,
+                                                                                                                         self.sentiment_classification_model,
+                                                                                                                         self.sentiment_classification_feature_extractor)
+
+            ngram_positive_sentiment_info_per_month = [(x_ticks.index(month) + 1, total, average, max) for month, total, average, max in ngram_positive_sentiment_info_per_month]
+            ngram_positive_sentiment_info_per_month = sorted(ngram_positive_sentiment_info_per_month, key=lambda x : x[0])
+
+            if ngram_positive_sentiment_info_per_month:
+                self.generate_and_plot_info(ngram_positive_sentiment_info_per_month, "Month", "Frequency", "N-gram positive sentiment", x_ticks)
+
+        elif self.radio_negative_sentiment.isChecked():
+            
+            ngram_negative_sentiment_info_per_month = self.twitter_data_analyser.generate_ngram_sentiment_info_per_month(self.ngram,
+                                                                                                                         self.year,
+                                                                                                                         self.tokenize,
+                                                                                                                         self.sentiment_classification_model,
+                                                                                                                         self.sentiment_classification_feature_extractor,
+                                                                                                                         sentiment="negative")
+
+            ngram_negative_sentiment_info_per_month = [(x_ticks.index(month) + 1, total, average, max) for month, total, average, max in ngram_negative_sentiment_info_per_month]
+            ngram_negative_sentiment_info_per_month = sorted(ngram_negative_sentiment_info_per_month, key=lambda x : x[0])
+
+            if ngram_negative_sentiment_info_per_month:
+                self.generate_and_plot_info(ngram_negative_sentiment_info_per_month, "Month", "Frequency", "N-gram negative sentiment", x_ticks)
+                     
+
             
     def generate_info_per_day(self):
         """Generate the infos for the ngram across the days in the chosen month.
@@ -310,7 +361,38 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
 
             if ngram_retweets_info_per_day:
                 self.generate_and_plot_info(ngram_retweets_info_per_day, "Day", "Frequency", "N-gram retweets", min_x=1, max_x=31)
+
+        elif self.radio_positive_sentiment.isChecked():
+
+            ngram_positive_sentiment_info_per_day = self.twitter_data_analyser.generate_ngram_sentiment_info_per_day(self.ngram,
+                                                                                                                     self.month,
+                                                                                                                     self.year,
+                                                                                                                     self.tokenize,
+                                                                                                                     self.sentiment_classification_model,
+                                                                                                                     self.sentiment_classification_feature_extractor)
+
+            ngram_positive_sentiment_info_per_day = [(int(day), total, average, max) for day, total, average, max in ngram_positive_sentiment_info_per_day]
+            ngram_positive_sentiment_info_per_day = sorted(ngram_positive_sentiment_info_per_day, key=lambda x : x[0])
+
+            if ngram_positive_sentiment_info_per_day:
+                self.generate_and_plot_info(ngram_positive_sentiment_info_per_day, "Day", "Frequency", "N-gram positive sentiment", min_x=1, max_x=31)
             
+        elif self.radio_negative_sentiment.isChecked():
+
+            ngram_negative_sentiment_info_per_day = self.twitter_data_analyser.generate_ngram_sentiment_info_per_day(self.ngram,
+                                                                                                                     self.month,
+                                                                                                                     self.year,
+                                                                                                                     self.tokenize,
+                                                                                                                     self.sentiment_classification_model,
+                                                                                                                     self.sentiment_classification_feature_extractor,
+                                                                                                                     sentiment="negative")
+
+            ngram_negative_sentiment_info_per_day = [(int(day), total, average, max) for day, total, average, max in ngram_negative_sentiment_info_per_day]
+            ngram_negative_sentiment_info_per_day = sorted(ngram_negative_sentiment_info_per_day, key=lambda x : x[0])
+
+            if ngram_negative_sentiment_info_per_day:
+                self.generate_and_plot_info(ngram_negative_sentiment_info_per_day, "Day", "Frequency", "N-gram negative sentiment", min_x=1, max_x=31)
+
     def generate_info_per_hour(self):
         """Generate the infos for the ngram across the hours in the chosen day.
         
@@ -345,6 +427,39 @@ class WidgetNGrams(QWidget, Ui_widget_ngrams):
 
             if ngram_retweets_info_per_hour:
                 self.generate_and_plot_info(ngram_retweets_info_per_hour, "Hour", "Frequency", "N-gram retweets", min_x=0, max_x=23)
+
+        elif self.radio_positive_sentiment.isChecked():
+
+            ngram_positive_sentiment_info_per_hour = self.twitter_data_analyser.generate_ngram_sentiment_info_per_hour(self.ngram,
+                                                                                                                       self.day,
+                                                                                                                       self.month,
+                                                                                                                       self.year,
+                                                                                                                       self.tokenize,
+                                                                                                                       self.sentiment_classification_model,
+                                                                                                                       self.sentiment_classification_feature_extractor)
+
+            ngram_positive_sentiment_info_per_hour = [(int(hour), total, average, max) for hour, total, average, max in ngram_positive_sentiment_info_per_hour]
+            ngram_positive_sentiment_info_per_hour = sorted(ngram_positive_sentiment_info_per_hour, key=lambda x : x[0])
+
+            if ngram_positive_sentiment_info_per_hour:
+                self.generate_and_plot_info(ngram_positive_sentiment_info_per_hour, "Hour", "Frequency", "N-gram positive sentiment", min_x=0, max_x=23)
+
+        elif self.radio_negative_sentiment.isChecked():
+
+            ngram_negative_sentiment_info_per_hour = self.twitter_data_analyser.generate_ngram_sentiment_info_per_hour(self.ngram,
+                                                                                                                       self.day,
+                                                                                                                       self.month,
+                                                                                                                       self.year,
+                                                                                                                       self.tokenize,
+                                                                                                                       self.sentiment_classification_model,
+                                                                                                                       self.sentiment_classification_feature_extractor,
+                                                                                                                       sentiment="negative")
+
+            ngram_negative_sentiment_info_per_hour = [(int(hour), total, average, max) for hour, total, average, max in ngram_negative_sentiment_info_per_hour]
+            ngram_negative_sentiment_info_per_hour = sorted(ngram_negative_sentiment_info_per_hour, key=lambda x : x[0])
+
+            if ngram_negative_sentiment_info_per_hour:
+                self.generate_and_plot_info(ngram_negative_sentiment_info_per_hour, "Hour", "Frequency", "N-gram negative sentiment", min_x=0, max_x=23)
 
 
     def plot_figure(self, file_name):
