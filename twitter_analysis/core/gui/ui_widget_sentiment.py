@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_sentiment.ui'
 #
-# Created: Thu May 14 21:28:30 2015
+# Created: Wed May 27 15:15:02 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -29,9 +29,7 @@ class Ui_widget_sentiment(object):
         widget_sentiment.resize(779, 549)
         self.label_sentiment_percentage = QtGui.QLabel(widget_sentiment)
         self.label_sentiment_percentage.setGeometry(QtCore.QRect(10, 50, 761, 491))
-        self.label_sentiment_percentage.setStyleSheet(_fromUtf8("QLabel#label_sentiment_percentage { \n"
-"    background-color: rgb(234, 234, 234);\n"
-" } "))
+        self.label_sentiment_percentage.setStyleSheet(_fromUtf8(""))
         self.label_sentiment_percentage.setText(_fromUtf8(""))
         self.label_sentiment_percentage.setObjectName(_fromUtf8("label_sentiment_percentage"))
 
@@ -39,5 +37,5 @@ class Ui_widget_sentiment(object):
         QtCore.QMetaObject.connectSlotsByName(widget_sentiment)
 
     def retranslateUi(self, widget_sentiment):
-        widget_sentiment.setWindowTitle(_translate("widget_sentiment", "Form", None))
+        widget_sentiment.setWindowTitle(_translate("widget_sentiment", "sentiment", None))
 

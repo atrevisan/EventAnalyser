@@ -288,6 +288,54 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
          
         self.plot_figure(plot_file_name)
 
+    def clear_plot(self, x_label, y_label, title, x_ticks=[], min_x=0, max_x=0):
+        """Clear the plot when no info is generated.
+        
+        The info could be the frequency, retweets, positive sentiment or negative sentiment
+        relations to the chosen ngram (namely absolute frequency, mean frequency and max frequency).
+
+        Parameters
+        ----------
+        x_label : str
+            The x axis title.    
+
+        y_label : str
+            The y axis title.
+
+        title : str
+            The plot title.
+
+        x_ticks : list of str
+            The x axis values when strings.
+
+        min_x : int
+            The smaller value in the x axis range.
+
+        max_x : int
+            The largest value in the x axis range.
+        """
+ 
+        y_total = []
+        x_total = []
+
+        y_average = []
+        x_average = []
+
+        y_max = []
+        x_max = []
+            
+        max_y = 0
+            
+        plot_file_name = self.clusterized_dataset_path[:-4] + "_" + self.ngram.replace(" ", "_") + ".png"
+        self.plot_generator.create_three_plots(plot_file_name, 
+                                               x_total, y_total, "total", 
+                                               x_average, y_average, "average", 
+                                               x_max, y_max, "max", 
+                                               x_label, y_label, title, 
+                                               max_y, min_x=min_x, max_x=max_x, x_ticks=x_ticks)  
+         
+        self.plot_figure(plot_file_name)
+
     def generate_info_per_month(self):
         """Generate the infos for the ngram across the months in the chosen year.
         
@@ -308,6 +356,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_info_per_month:
                 self.generate_and_plot_info(ngram_info_per_month, "Month", "Frequency", "N-gram frequency", x_ticks)
+            else:
+                self.clear_plot("Month", "Frequency", "N-gram frequency", x_ticks)
 
         elif self.radio_retweets.isChecked():
 
@@ -319,7 +369,9 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
             ngram_retweets_info_per_month = sorted(ngram_retweets_info_per_month, key=lambda x : x[0])
 
             if ngram_retweets_info_per_month:
-                self.generate_and_plot_info(ngram_retweets_info_per_month, "Month", "Frequency", "N-gram retweets", x_ticks)  
+                self.generate_and_plot_info(ngram_retweets_info_per_month, "Month", "Frequency", "N-gram retweets", x_ticks)
+            else:
+                self.clear_plot("Month", "Frequency", "N-gram retweets", x_ticks)  
                 
       
         elif self.radio_positive_sentiment.isChecked():
@@ -335,6 +387,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_positive_sentiment_info_per_month:
                 self.generate_and_plot_info(ngram_positive_sentiment_info_per_month, "Month", "Frequency", "N-gram positive sentiment", x_ticks)
+            else:
+                self.clear_plot("Month", "Frequency", "N-gram positive sentiment", x_ticks)
 
         elif self.radio_negative_sentiment.isChecked():
             
@@ -350,6 +404,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_negative_sentiment_info_per_month:
                 self.generate_and_plot_info(ngram_negative_sentiment_info_per_month, "Month", "Frequency", "N-gram negative sentiment", x_ticks)
+            else:
+                self.clear_plot("Month", "Frequency", "N-gram negative sentiment", x_ticks)
                      
 
             
@@ -372,6 +428,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_info_per_day:
                 self.generate_and_plot_info(ngram_info_per_day, "Day", "Frequency", "N-gram frequency", min_x=1, max_x=31)
+            else:
+                self.clear_plot("Day", "Frequency", "N-gram frequency", min_x=1, max_x=31)
 
         elif self.radio_retweets.isChecked():
 
@@ -385,6 +443,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_retweets_info_per_day:
                 self.generate_and_plot_info(ngram_retweets_info_per_day, "Day", "Frequency", "N-gram retweets", min_x=1, max_x=31)
+            else:
+                self.clear_plot("Day", "Frequency", "N-gram retweets", min_x=1, max_x=31)
 
         elif self.radio_positive_sentiment.isChecked():
 
@@ -400,6 +460,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_positive_sentiment_info_per_day:
                 self.generate_and_plot_info(ngram_positive_sentiment_info_per_day, "Day", "Frequency", "N-gram positive sentiment", min_x=1, max_x=31)
+            else:
+                self.clear_plot("Day", "Frequency", "N-gram positive sentiment", min_x=1, max_x=31)
             
         elif self.radio_negative_sentiment.isChecked():
 
@@ -416,6 +478,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_negative_sentiment_info_per_day:
                 self.generate_and_plot_info(ngram_negative_sentiment_info_per_day, "Day", "Frequency", "N-gram negative sentiment", min_x=1, max_x=31)
+            else:
+                self.clear_plot("Day", "Frequency", "N-gram negative sentiment", min_x=1, max_x=31)
 
     def generate_info_per_hour(self):
         """Generate the infos for the ngram across the hours in the chosen day.
@@ -437,6 +501,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_info_per_hour:
                 self.generate_and_plot_info(ngram_info_per_hour, "Hour", "Frequency", "N-gram frequency", min_x=0, max_x=23)
+            else:
+                self.clear_plot("Hour", "Frequency", "N-gram frequency", min_x=0, max_x=23)
 
         elif self.radio_retweets.isChecked():
 
@@ -451,6 +517,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_retweets_info_per_hour:
                 self.generate_and_plot_info(ngram_retweets_info_per_hour, "Hour", "Frequency", "N-gram retweets", min_x=0, max_x=23)
+            else:
+                self.clear_plot("Hour", "Frequency", "N-gram retweets", min_x=0, max_x=23)
 
         elif self.radio_positive_sentiment.isChecked():
 
@@ -467,6 +535,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_positive_sentiment_info_per_hour:
                 self.generate_and_plot_info(ngram_positive_sentiment_info_per_hour, "Hour", "Frequency", "N-gram positive sentiment", min_x=0, max_x=23)
+            else:
+                self.clear_plot("Hour", "Frequency", "N-gram positive sentiment", min_x=0, max_x=23)
 
         elif self.radio_negative_sentiment.isChecked():
 
@@ -484,6 +554,8 @@ class WidgetNGramsPerCluster(QWidget, Ui_widget_ngrams_per_cluster):
 
             if ngram_negative_sentiment_info_per_hour:
                 self.generate_and_plot_info(ngram_negative_sentiment_info_per_hour, "Hour", "Frequency", "N-gram negative sentiment", min_x=0, max_x=23)
+            else:
+                self.clear_plot("Hour", "Frequency", "N-gram negative sentiment", min_x=0, max_x=23)
 
 
     def plot_figure(self, file_name):

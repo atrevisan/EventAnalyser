@@ -22,6 +22,7 @@ from core.gui.widget_sentiment import WidgetSentiment
 from core.gui.widget_sentiment_per_cluster import WidgetSentimentPerCluster
 from core.gui.widget_ngrams import WidgetNGrams
 from core.gui.widget_ngrams_per_cluster import WidgetNGramsPerCluster
+from core.gui.widget_hashtags import WidgetHashtags
 
 
 class MainWindow(QMainWindow, Ui_main_window):
@@ -59,7 +60,17 @@ class MainWindow(QMainWindow, Ui_main_window):
         self.action_sentiment_per_cluster.triggered.connect(self.add_widget_sentiment_per_cluster)
         self.action_ngrams.triggered.connect(self.add_widget_ngrams)
         self.action_ngrams_per_cluster.triggered.connect(self.add_widget_ngrams_per_cluster)
+        self.action_hashtags.triggered.connect(self.add_widget_hashtags)
 
+    def add_widget_hashtags(self):
+        """Replace the current widget for a new widget_hashtags.
+        
+        This widget displays statistical info regarding the
+        dataset top hashtags.
+        """
+
+        widget_hashtags = WidgetHashtags()
+        self.setCentralWidget(widget_hashtags)
 
     def add_widget_ngrams(self):
         """Replace the current widget for a new widget_ngrams.

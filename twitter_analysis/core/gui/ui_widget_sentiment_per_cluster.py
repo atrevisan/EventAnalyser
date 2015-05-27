@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_sentiment_per_cluster.ui'
 #
-# Created: Mon May 18 10:11:45 2015
+# Created: Wed May 27 15:14:31 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -29,21 +29,19 @@ class Ui_widget_sentiment_per_cluster(object):
         widget_sentiment_per_cluster.resize(779, 549)
         self.label_sentiment_percentage = QtGui.QLabel(widget_sentiment_per_cluster)
         self.label_sentiment_percentage.setGeometry(QtCore.QRect(10, 50, 761, 491))
-        self.label_sentiment_percentage.setStyleSheet(_fromUtf8("QLabel#label_sentiment_percentage { \n"
-"    background-color: rgb(234, 234, 234);\n"
-" } "))
+        self.label_sentiment_percentage.setStyleSheet(_fromUtf8(""))
         self.label_sentiment_percentage.setText(_fromUtf8(""))
         self.label_sentiment_percentage.setObjectName(_fromUtf8("label_sentiment_percentage"))
-        self.widget = QtGui.QWidget(widget_sentiment_per_cluster)
-        self.widget.setGeometry(QtCore.QRect(70, 20, 141, 22))
-        self.widget.setObjectName(_fromUtf8("widget"))
-        self.horizontalLayout = QtGui.QHBoxLayout(self.widget)
+        self.layoutWidget = QtGui.QWidget(widget_sentiment_per_cluster)
+        self.layoutWidget.setGeometry(QtCore.QRect(70, 20, 141, 22))
+        self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
+        self.horizontalLayout = QtGui.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtGui.QLabel(self.widget)
+        self.label = QtGui.QLabel(self.layoutWidget)
         self.label.setObjectName(_fromUtf8("label"))
         self.horizontalLayout.addWidget(self.label)
-        self.combo_cluster = QtGui.QComboBox(self.widget)
+        self.combo_cluster = QtGui.QComboBox(self.layoutWidget)
         self.combo_cluster.setObjectName(_fromUtf8("combo_cluster"))
         self.horizontalLayout.addWidget(self.combo_cluster)
         self.horizontalLayout.setStretch(1, 1)

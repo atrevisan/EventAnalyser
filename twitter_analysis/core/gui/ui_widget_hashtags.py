@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_hashtags.ui'
 #
-# Created: Wed Apr  1 08:51:39 2015
+# Created: Wed May 27 16:11:58 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,9 +26,9 @@ except AttributeError:
 class Ui_widget_hashtags(object):
     def setupUi(self, widget_hashtags):
         widget_hashtags.setObjectName(_fromUtf8("widget_hashtags"))
-        widget_hashtags.resize(779, 549)
+        widget_hashtags.resize(800, 549)
         self.label_graph = QtGui.QLabel(widget_hashtags)
-        self.label_graph.setGeometry(QtCore.QRect(170, 70, 591, 451))
+        self.label_graph.setGeometry(QtCore.QRect(190, 70, 591, 451))
         self.label_graph.setStyleSheet(_fromUtf8("QLabel#label_graph { \n"
 "    background-color: rgb(234, 234, 234);\n"
 "     border: 2px solid gray; \n"
@@ -39,25 +39,25 @@ class Ui_widget_hashtags(object):
         self.layoutWidget = QtGui.QWidget(widget_hashtags)
         self.layoutWidget.setGeometry(QtCore.QRect(390, 10, 221, 31))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
-        self.hlayout_hashtags = QtGui.QHBoxLayout(self.layoutWidget)
-        self.hlayout_hashtags.setMargin(0)
-        self.hlayout_hashtags.setObjectName(_fromUtf8("hlayout_hashtags"))
+        self.hlayout_ngrams = QtGui.QHBoxLayout(self.layoutWidget)
+        self.hlayout_ngrams.setMargin(0)
+        self.hlayout_ngrams.setObjectName(_fromUtf8("hlayout_ngrams"))
         self.label_2 = QtGui.QLabel(self.layoutWidget)
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_2.setFont(font)
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.hlayout_hashtags.addWidget(self.label_2)
+        self.hlayout_ngrams.addWidget(self.label_2)
         self.combo_hashtags = QtGui.QComboBox(self.layoutWidget)
         self.combo_hashtags.setObjectName(_fromUtf8("combo_hashtags"))
-        self.hlayout_hashtags.addWidget(self.combo_hashtags)
-        self.hlayout_hashtags.setStretch(0, 1)
-        self.hlayout_hashtags.setStretch(1, 6)
+        self.hlayout_ngrams.addWidget(self.combo_hashtags)
+        self.hlayout_ngrams.setStretch(0, 1)
+        self.hlayout_ngrams.setStretch(1, 6)
         self.widget = QtGui.QWidget(widget_hashtags)
-        self.widget.setGeometry(QtCore.QRect(10, 100, 137, 106))
+        self.widget.setGeometry(QtCore.QRect(30, 100, 137, 106))
         self.widget.setStyleSheet(_fromUtf8("QWidget#widget { \n"
 "    background-color: rgb(234, 234, 234);\n"
-"     border: 2px solid gray; \n"
+"     border: 1px solid gray; \n"
 "  \n"
 " } "))
         self.widget.setObjectName(_fromUtf8("widget"))
@@ -80,11 +80,11 @@ class Ui_widget_hashtags(object):
         self.verticalLayout_2.addWidget(self.radio_negative_sentiment)
         self.horizontalLayout_4.addLayout(self.verticalLayout_2)
         self.widget_2 = QtGui.QWidget(widget_hashtags)
-        self.widget_2.setGeometry(QtCore.QRect(10, 250, 137, 185))
+        self.widget_2.setGeometry(QtCore.QRect(30, 250, 137, 185))
         self.widget_2.setStyleSheet(_fromUtf8("QWidget#widget_2 { \n"
 "    background-color: rgb(234, 234, 234);\n"
-"     border: 2px solid gray; \n"
-"  \n"
+"\n"
+"       border: 1px solid gray; \n"
 " } "))
         self.widget_2.setObjectName(_fromUtf8("widget_2"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.widget_2)

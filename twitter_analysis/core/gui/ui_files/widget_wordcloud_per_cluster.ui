@@ -23,10 +23,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QLabel#label_wordcloud { 
-	background-color: rgb(234, 234, 234);
- 
- } </string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>

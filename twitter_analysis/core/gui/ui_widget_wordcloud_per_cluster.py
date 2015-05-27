@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_wordcloud_per_cluster.ui'
 #
-# Created: Wed Apr 15 10:39:26 2015
+# Created: Wed May 27 15:27:08 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -29,10 +29,7 @@ class Ui_widget_wordcloud_per_cluster(object):
         widget_wordcloud_per_cluster.resize(779, 549)
         self.label_wordcloud = QtGui.QLabel(widget_wordcloud_per_cluster)
         self.label_wordcloud.setGeometry(QtCore.QRect(10, 50, 761, 491))
-        self.label_wordcloud.setStyleSheet(_fromUtf8("QLabel#label_wordcloud { \n"
-"    background-color: rgb(234, 234, 234);\n"
-" \n"
-" } "))
+        self.label_wordcloud.setStyleSheet(_fromUtf8(""))
         self.label_wordcloud.setText(_fromUtf8(""))
         self.label_wordcloud.setObjectName(_fromUtf8("label_wordcloud"))
         self.layoutWidget = QtGui.QWidget(widget_wordcloud_per_cluster)

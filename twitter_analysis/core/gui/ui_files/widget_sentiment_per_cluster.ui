@@ -23,15 +23,13 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QLabel#label_sentiment_percentage { 
-	background-color: rgb(234, 234, 234);
- } </string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>70</x>
