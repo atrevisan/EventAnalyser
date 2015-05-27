@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_ngrams_per_cluster.ui'
 #
-# Created: Wed Apr  1 08:53:34 2015
+# Created: Wed May 27 12:03:52 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,9 +26,9 @@ except AttributeError:
 class Ui_widget_ngrams_per_cluster(object):
     def setupUi(self, widget_ngrams_per_cluster):
         widget_ngrams_per_cluster.setObjectName(_fromUtf8("widget_ngrams_per_cluster"))
-        widget_ngrams_per_cluster.resize(779, 549)
+        widget_ngrams_per_cluster.resize(800, 549)
         self.label_graph = QtGui.QLabel(widget_ngrams_per_cluster)
-        self.label_graph.setGeometry(QtCore.QRect(170, 70, 591, 451))
+        self.label_graph.setGeometry(QtCore.QRect(190, 70, 591, 451))
         self.label_graph.setStyleSheet(_fromUtf8("QLabel#label_graph { \n"
 "    background-color: rgb(234, 234, 234);\n"
 "     border: 2px solid gray; \n"
@@ -37,7 +37,7 @@ class Ui_widget_ngrams_per_cluster(object):
         self.label_graph.setText(_fromUtf8(""))
         self.label_graph.setObjectName(_fromUtf8("label_graph"))
         self.layoutWidget = QtGui.QWidget(widget_ngrams_per_cluster)
-        self.layoutWidget.setGeometry(QtCore.QRect(390, 10, 221, 31))
+        self.layoutWidget.setGeometry(QtCore.QRect(470, 11, 201, 22))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.hlayout_ngrams = QtGui.QHBoxLayout(self.layoutWidget)
         self.hlayout_ngrams.setMargin(0)
@@ -54,10 +54,10 @@ class Ui_widget_ngrams_per_cluster(object):
         self.hlayout_ngrams.setStretch(0, 1)
         self.hlayout_ngrams.setStretch(1, 6)
         self.widget = QtGui.QWidget(widget_ngrams_per_cluster)
-        self.widget.setGeometry(QtCore.QRect(10, 100, 137, 106))
+        self.widget.setGeometry(QtCore.QRect(30, 100, 137, 106))
         self.widget.setStyleSheet(_fromUtf8("QWidget#widget { \n"
 "    background-color: rgb(234, 234, 234);\n"
-"     border: 2px solid gray; \n"
+"     border: 1px solid gray; \n"
 "  \n"
 " } "))
         self.widget.setObjectName(_fromUtf8("widget"))
@@ -80,11 +80,11 @@ class Ui_widget_ngrams_per_cluster(object):
         self.verticalLayout_2.addWidget(self.radio_negative_sentiment)
         self.horizontalLayout_4.addLayout(self.verticalLayout_2)
         self.widget_2 = QtGui.QWidget(widget_ngrams_per_cluster)
-        self.widget_2.setGeometry(QtCore.QRect(10, 250, 137, 185))
+        self.widget_2.setGeometry(QtCore.QRect(30, 250, 137, 185))
         self.widget_2.setStyleSheet(_fromUtf8("QWidget#widget_2 { \n"
 "    background-color: rgb(234, 234, 234);\n"
-"     border: 2px solid gray; \n"
-"  \n"
+"\n"
+"       border: 1px solid gray; \n"
 " } "))
         self.widget_2.setObjectName(_fromUtf8("widget_2"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.widget_2)
@@ -138,23 +138,19 @@ class Ui_widget_ngrams_per_cluster(object):
         self.button_info_per_hour.setObjectName(_fromUtf8("button_info_per_hour"))
         self.verticalLayout.addWidget(self.button_info_per_hour)
         self.horizontalLayout_5.addLayout(self.verticalLayout)
-        self.layoutWidget_2 = QtGui.QWidget(widget_ngrams_per_cluster)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(140, 10, 191, 31))
-        self.layoutWidget_2.setObjectName(_fromUtf8("layoutWidget_2"))
-        self.hlayout_cluster = QtGui.QHBoxLayout(self.layoutWidget_2)
-        self.hlayout_cluster.setMargin(0)
-        self.hlayout_cluster.setObjectName(_fromUtf8("hlayout_cluster"))
-        self.label_5 = QtGui.QLabel(self.layoutWidget_2)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.label_5.setFont(font)
+        self.widget1 = QtGui.QWidget(widget_ngrams_per_cluster)
+        self.widget1.setGeometry(QtCore.QRect(210, 11, 161, 22))
+        self.widget1.setObjectName(_fromUtf8("widget1"))
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.widget1)
+        self.horizontalLayout_6.setMargin(0)
+        self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
+        self.label_5 = QtGui.QLabel(self.widget1)
         self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.hlayout_cluster.addWidget(self.label_5)
-        self.combo_cluster = QtGui.QComboBox(self.layoutWidget_2)
+        self.horizontalLayout_6.addWidget(self.label_5)
+        self.combo_cluster = QtGui.QComboBox(self.widget1)
         self.combo_cluster.setObjectName(_fromUtf8("combo_cluster"))
-        self.hlayout_cluster.addWidget(self.combo_cluster)
-        self.hlayout_cluster.setStretch(0, 1)
-        self.hlayout_cluster.setStretch(1, 6)
+        self.horizontalLayout_6.addWidget(self.combo_cluster)
+        self.horizontalLayout_6.setStretch(1, 1)
 
         self.retranslateUi(widget_ngrams_per_cluster)
         QtCore.QMetaObject.connectSlotsByName(widget_ngrams_per_cluster)
@@ -172,5 +168,5 @@ class Ui_widget_ngrams_per_cluster(object):
         self.button_info_per_day.setText(_translate("widget_ngrams_per_cluster", "Info per day", None))
         self.label_4.setText(_translate("widget_ngrams_per_cluster", "Day:", None))
         self.button_info_per_hour.setText(_translate("widget_ngrams_per_cluster", "Info per hour", None))
-        self.label_5.setText(_translate("widget_ngrams_per_cluster", "Clusters:", None))
+        self.label_5.setText(_translate("widget_ngrams_per_cluster", "Cluster:", None))
 
