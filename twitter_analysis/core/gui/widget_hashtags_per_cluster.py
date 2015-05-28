@@ -11,10 +11,10 @@ import os
 import pickle
 import csv
 
-from core.gui.ui_widget_hashtags import Ui_widget_hashtags
+from core.gui.ui_widget_hashtags_per_cluster import Ui_widget_hashtags_per_cluster
 from core.textutils.text_analysis import TwitterDataAnalysis, PlotGenerator
 
-class WidgetHashtags(QWidget, Ui_widget_hashtags):
+class WidgetHashtagsPerCluster(QWidget, Ui_widget_hashtags_per_cluster):
     """This widget displays hashtags frequency, retweet and sentiment distributions.
     
     Atributes
@@ -22,8 +22,8 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
     tweets : list of tuples
         Store tweets in the form (cluster_label, created_at, retweet_count, tweet_text, latitude, longitude).
 
-    dataset_top_hashtags : list of tuples (string, number)
-        The global importance of each hashtag in a text corpus in descending order. 
+    chosen_cluster_tweets : list of tuples
+        Store tweets in the form (cluster_label, created_at, retweet_count, tweet_text, latitude, longitude).
 
     clusterized_dataset_path : string
         The path to the clusterized tweets. This path will be used to composing the file name for the plots.
@@ -81,7 +81,7 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
             csv_reader = csv.reader(f, delimiter=';', quotechar='|')
             for tweet in csv_reader:
                 self.tweets.append((tweet[0], tweet[1], tweet[2], tweet[3], tweet[4], tweet[5]))
- 
+        
         # Loading the sentiment classification model
         sentiment_classification_model_path_file = os.getcwd() + r"\core\gui\sentiment_classification_model_path.clf" 
         with open(sentiment_classification_model_path_file, 'rb') as handle:
@@ -93,9 +93,45 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
         with open(sentiment_classification_model_path[:-14] + "feature_extractor.pkl", 'rb') as handle:
             self.sentiment_classification_feature_extractor = pickle.loads(handle.read())
 
+        self.plot_generator = PlotGenerator()
+        
+        self.combo_hashtags.activated[str].connect(self.on_activated_combo_hashtags)
+
+        self.combo_year.activated[str].connect(self.on_activated_combo_year)
+        self.combo_month.activated[str].connect(self.on_activated_combo_month)
+        self.combo_day.activated[str].connect(self.on_activated_combo_day)
+
+        # Loading top n-grams per cluster
+        with open(self.clusterized_dataset_path[:-4] + "_top_ngrams_per_cluster.pkl", 'rb') as handle:
+            top_ngrams_per_cluster = pickle.loads(handle.read())
+
+        number_of_clusters = len(top_ngrams_per_cluster)
+        self.combo_cluster.addItems(["Cluster %d" % cluster_label for cluster_label in range(number_of_clusters)])
+        self.combo_cluster.activated[int].connect(self.on_activated_combo_cluster)
+
+        self.button_info_per_month.clicked.connect(self.generate_info_per_month)
+        self.button_info_per_day.clicked.connect(self.generate_info_per_day)
+        self.button_info_per_hour.clicked.connect(self.generate_info_per_hour)
+
+    def on_activated_combo_cluster(self, cluster_label):
+        """Filter the tweets that belong to the chosen cluster.
+        
+        Parameteer
+        ----------
+        cluster_label : int
+            The index of the chosen cluster from the combobox.
+        """
+
+        self.combo_hashtags.clear()
+
+        self.chosen_cluster_tweets = [tweet for tweet in self.tweets if tweet[0] == str(cluster_label)]
+        self.twitter_data_analyser = TwitterDataAnalysis(self.chosen_cluster_tweets)
+
+        self.combo_hashtags.addItems([hashtag[0] for hashtag in self.twitter_data_analyser.get_top_hashtags()])
+
         list_of_years = []
         list_of_months = []
-        for tweet in self.tweets:
+        for tweet in self.chosen_cluster_tweets:
 
             tweet_time = tweet[1]
             tweet_year = tweet_time.split()[5]
@@ -104,24 +140,11 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
             list_of_years.append(tweet_year)
             list_of_months.append(tweet_month)
             
+        self.combo_year.clear()
+        self.combo_month.clear()
+
         self.combo_year.addItems(list(set(list_of_years)))
         self.combo_month.addItems(list(set(list_of_months)))
-
-        self.twitter_data_analyser = TwitterDataAnalysis(self.tweets)
-        self.plot_generator = PlotGenerator()
-
-        self.dataset_top_hashtags = self.twitter_data_analyser.get_top_hashtags()
-                               
-        self.combo_hashtags.addItems([hashtag[0] for hashtag in self.dataset_top_hashtags])
-        self.combo_hashtags.activated[str].connect(self.on_activated_combo_hashtags)
-
-        self.combo_year.activated[str].connect(self.on_activated_combo_year)
-        self.combo_month.activated[str].connect(self.on_activated_combo_month)
-        self.combo_day.activated[str].connect(self.on_activated_combo_day)
-
-        self.button_info_per_month.clicked.connect(self.generate_info_per_month)
-        self.button_info_per_day.clicked.connect(self.generate_info_per_day)
-        self.button_info_per_hour.clicked.connect(self.generate_info_per_hour)
 
     def on_activated_combo_hashtags(self, hashtag):
         """Handle events on the combo box hashtags.
@@ -175,10 +198,9 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
         self.combo_day.clear()
 
         list_of_days = []
-        for tweet in self.tweets:
+        for tweet in self.chosen_cluster_tweets:
 
             tweet_time = tweet[1]
-            
             tweet_month = tweet_time.split()[1]
 
             if tweet_month == self.month:
@@ -209,7 +231,7 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
 
         Parameters
         ----------
-        hashtag_info : list of tuples (int, int, float, int)
+        ngram_info : list of tuples (int, int, float, int)
             The x axis component, the total, the average and max
             component values for the three curves.
 
@@ -313,7 +335,8 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
         if self.radio_frequency.isChecked():
            
             hashtag_info_per_month = self.twitter_data_analyser.generate_hashtag_frequency_info_per_month(self.hashtag, 
-                                                                                                          self.year)
+                                                                                                          self.year) 
+                                                                                                      
 
             hashtag_info_per_month = [(x_ticks.index(month) + 1, total, average, max) for month, total, average, max in hashtag_info_per_month]
             hashtag_info_per_month = sorted(hashtag_info_per_month, key=lambda x : x[0])
@@ -327,6 +350,7 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
 
             hashtag_retweets_info_per_month = self.twitter_data_analyser.generate_hashtag_retweet_info_per_month(self.hashtag,
                                                                                                                  self.year)
+                                                                                                             
 
             hashtag_retweets_info_per_month = [(x_ticks.index(month) + 1, total, average, max) for month, total, average, max in hashtag_retweets_info_per_month]
             hashtag_retweets_info_per_month = sorted(hashtag_retweets_info_per_month, key=lambda x : x[0])
@@ -380,6 +404,7 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
             hashtag_info_per_day = self.twitter_data_analyser.generate_hashtag_frequency_info_per_day(self.hashtag, 
                                                                                                       self.month, 
                                                                                                       self.year)
+                                                                                                  
 
             hashtag_info_per_day = [(int(day), total, average, max) for day, total, average, max in hashtag_info_per_day]
             hashtag_info_per_day = sorted(hashtag_info_per_day, key=lambda x : x[0])
@@ -394,6 +419,7 @@ class WidgetHashtags(QWidget, Ui_widget_hashtags):
             hashtag_retweets_info_per_day = self.twitter_data_analyser.generate_hashtag_retweet__info_per_day(self.hashtag,
                                                                                                               self.month,
                                                                                                               self.year)
+                                                                                                          
 
             hashtag_retweets_info_per_day = [(int(day), total, average, max) for day, total, average, max in hashtag_retweets_info_per_day]
             hashtag_retweets_info_per_day = sorted(hashtag_retweets_info_per_day, key=lambda x : x[0])
