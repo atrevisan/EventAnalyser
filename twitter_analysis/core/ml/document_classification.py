@@ -67,11 +67,23 @@ class DocumentClassification:
 
         self.classifier = "Nave Bayes"
 
+        self.min_max_scaler = preprocessing.MinMaxScaler()
+
         t0 = time()
-        self.clf = MultinomialNB().fit(self.training_data, self.training_labels)
+
+        training_data = self.training_data
+        test_data = self.test_data
+
+         # scaled training data
+        if self.perform_lsa:
+            training_data = self.min_max_scaler.fit_transform(self.training_data)
+            test_data = self.min_max_scaler.transform(self.test_data)
+  
+
+        self.clf = MultinomialNB().fit(training_data, self.training_labels)
         self.classification_time = "%0.3fs" % (time() - t0)
 
-        predicted = self.clf.predict(self.test_data)
+        predicted = self.clf.predict(test_data)
 
         target_names = ['positive sentiment', 'negative sentiment']
         self.report_string = metrics.classification_report(self.test_labels, predicted, target_names=target_names)
@@ -99,12 +111,16 @@ class DocumentClassification:
         t0 = time()
 
         # scaled training data
-        training_data = self.min_max_scaler.fit_transform(self.training_data.todense())
+        if self.perform_lsa:
+            training_data = self.min_max_scaler.fit_transform(self.training_data)
+            test_data = self.min_max_scaler.transform(self.test_data)
+        else:
+            training_data = self.min_max_scaler.fit_transform(self.training_data.todense())
+            test_data = self.min_max_scaler.transform(self.test_data.todense())
 
         self.clf = LinearSVC(C=C).fit(training_data, self.training_labels)
         self.classification_time = "%0.3fs" % (time() - t0)
 
-        test_data = self.min_max_scaler.transform(self.test_data.todense())
         predicted = self.clf.predict(test_data)
 
         target_names = ['positive sentiment', 'negative sentiment']
@@ -126,10 +142,16 @@ class DocumentClassification:
 
         if self.perform_lsa:
             vectorized_documents = self.dr.transform_test_data(vectorized_documents)
+        
+        if self.perform_lsa and self.classifier == "Nave Bayes":
+            vectorized_documents = self.min_max_scaler.transform(vectorized_documents)
 
         # if svm perform feature scaling
-        if self.classifier == "SVM":
+        if self.classifier == "SVM" and self.perform_lsa:
             vectorized_documents = self.min_max_scaler.transform(vectorized_documents)
+
+        if self.classifier == "SVM" and not self.perform_lsa:
+            vectorized_documents = self.min_max_scaler.transform(vectorized_documents.todense())
 
         predicted_classes = self.clf.predict(vectorized_documents)
         return predicted_classes

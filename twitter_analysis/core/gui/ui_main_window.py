@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Apr 15 14:55:25 2015
+# Created: Thu May 28 09:16:40 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,7 +83,6 @@ class Ui_main_window(object):
         self.menu_analyse_tweets.addAction(self.action_relevant_tweets_per_cluster)
         self.menu_analyse_tweets.addAction(self.action_ngrams)
         self.menu_analyse_tweets.addAction(self.action_ngrams_per_cluster)
-        self.menu_analyse_tweets.addAction(self.action_sentiment_by_location)
         self.menu_analyse_tweets.addAction(self.action_hashtags)
         self.menu_analyse_tweets.addAction(self.action_hashtags_per_cluster)
         self.menu_analyse_tweets.addAction(self.action_cosine_similarity)

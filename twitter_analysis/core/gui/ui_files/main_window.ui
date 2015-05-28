@@ -43,7 +43,6 @@
      <addaction name="action_relevant_tweets_per_cluster"/>
      <addaction name="action_ngrams"/>
      <addaction name="action_ngrams_per_cluster"/>
-     <addaction name="action_sentiment_by_location"/>
      <addaction name="action_hashtags"/>
      <addaction name="action_hashtags_per_cluster"/>
      <addaction name="action_cosine_similarity"/>
