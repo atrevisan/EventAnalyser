@@ -9,7 +9,7 @@ about the text in the messages.
 The user will also enter some query for collecting training data for a sentiment classifier (SVM or Naive Bayes).
 The classifier will be used against the clusterized tweets aiding in the process of generating summarization information.
 
-You can find out more about this project on my monograph -> https://drive.google.com/open?id=0B7-F3fGyE7fIYW5YeEg2NnUzWG8
+You can find out more about this project on my monograph available in the root of this repository
 
 Major instructions for running the tool. 
 
